@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="SchoolXam.Views.AnneeMasterPage"
+             Title="AnneeMasterPage">
+    <StackLayout BackgroundColor="Red">
+        <Label 
+            Text="Annees List" />
+        <Button 
+            x:Name="btnAddAnnee" 
+            Text="Add" 
+            Command="{Binding AddAnneeCommand}" />
+        <ListView 
+            x:Name="lstAnnees"
+            ItemsSource="{Binding Annees}"
+            HasUnevenRows="True">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Label 
+                                Text="{Binding anneeID}"
+                                Font="15,Bold" />
+                            <Label 
+                                Text="{Binding anneeLib}" 
+                                Font="15,Bold" 
+                                Grid.Column="1" />
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackLayout>
+</ContentPage>

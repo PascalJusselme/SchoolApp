@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="SchoolXam.Views.ClasseAttribElevePage"
+             Title="Attribution des Élèves à la classe">
+    <StackLayout>
+        <Entry 
+            x:Name="txtNomEleve"
+            Placeholder="Nom de l'Élève"
+            Text="{Binding NomEleve}"/>
+        <Entry 
+            x:Name="txtPrenomEleve"
+            Placeholder="Prénom de l'Élève"
+            Text="{Binding PrenomEleve}"/>
+        <Button 
+            Text="Ajouter Élèves à la Classe"
+            Command="{Binding ClasseAttribEleveCommand}"/>
+        <ListView 
+            x:Name="lstEleves"
+            ItemsSource="{Binding Classe.Eleves}"
+            HasUnevenRows="False">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label 
+                                Text="{Binding eleveID}"
+                                Font="15,Bold" />
+                            <Label 
+                                Text="{Binding nomEleve}" 
+                                Font="15,Bold" 
+                                Grid.Column="1"/>
+                            <Label 
+                                Text="{Binding prenomEleve}" 
+                                Font="15,Bold" 
+                                Grid.Column="2"/>
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackLayout>
+</ContentPage>

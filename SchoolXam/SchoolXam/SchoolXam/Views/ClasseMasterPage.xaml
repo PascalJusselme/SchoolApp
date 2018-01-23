@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"             
+             xmlns:local="clr-namespace:SchoolXam.Behaviors;assembly=SchoolXam"
+             xmlns:converter="clr-namespace:SchoolXam.Converters;assembly=SchoolXam"
+             x:Class="SchoolXam.Views.ClasseMasterPage"
+             Title="Gestion des Classes de l'Année">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="baseStyle"
+             TargetType="Label">
+                <Setter Property="XAlign" Value="Start" />
+                <Setter Property="YAlign" Value="Center" />
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="FontAttributes" Value="Italic" />
+            </Style>
+            <converter:BooleanToObjectConverter 
+                x:Key="boolToStyleLib"
+                x:TypeArguments="Style">
+                <converter:BooleanToObjectConverter.FalseObject>
+                    <Style 
+                        TargetType="Label" 
+                        BasedOn="{StaticResource baseStyle}">
+                        <Setter 
+                            Property="TextColor" 
+                            Value="#F44336" />
+                        <Setter 
+                            Property="Text" 
+                            Value="Le libellé ne peut pas être vide" />
+                    </Style>
+                </converter:BooleanToObjectConverter.FalseObject>
+
+                <converter:BooleanToObjectConverter.TrueObject>
+                    <Style 
+                        TargetType="Label"                        
+                        BasedOn="{StaticResource baseStyle}">
+                        <Setter 
+                            Property="TextColor" 
+                            Value="#4CAF50" />
+                        <Setter 
+                            Property="Text" 
+                            Value="Le libellé est valide, à voir si il existe" />
+                    </Style>
+                </converter:BooleanToObjectConverter.TrueObject>
+            </converter:BooleanToObjectConverter>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <StackLayout>
+        <Entry 
+            x:Name="txtClasseLib"
+            Placeholder="Libellé Classe"
+            Text="{Binding ClasseLib}">
+        </Entry>
+        <Button
+            x:Name="btnAddClasse"
+            Text="Add Classe"
+            Command="{Binding AddClasseCommand}"
+            CommandParameter="{Binding ClasseLib}"/>
+        <ListView 
+            x:Name="lstClasses"
+            ItemsSource="{Binding ListClasses}"
+            HasUnevenRows="True">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Label 
+                                Text="{Binding classeID}"
+                                Font="15,Bold" />
+                            <Label 
+                                Text="{Binding classeLib}" 
+                                Font="15,Bold" 
+                                Grid.Column="1" />
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>        
+    </StackLayout>
+</ContentPage>

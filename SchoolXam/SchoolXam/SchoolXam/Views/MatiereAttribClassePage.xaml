@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="SchoolXam.Views.MatiereAttribClassePage"
+             Title="Attribution des Classes à la matière">
+    <StackLayout>
+        <Button 
+            Text="Attribuer Classe à la Matière"
+            Command="{Binding MatiereAttribClasseCommand}"/>
+        <ListView 
+            x:Name="lstClasses"
+            ItemsSource="{Binding ClasseAttribuable}" 
+            HasUnevenRows="True">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Label 
+                                Text="{Binding Data.classeID}"
+                                Font="15,Bold" />
+                            <Label 
+                                Text="{Binding Data.classeLib}" 
+                                Font="15,Bold" 
+                                Grid.Column="1"/>
+                            <Switch 
+                                IsToggled="{Binding Selected}" 
+                                Grid.Column="2" />
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackLayout>
+</ContentPage>

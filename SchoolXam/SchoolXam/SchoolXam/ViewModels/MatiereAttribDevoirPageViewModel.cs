@@ -13,9 +13,8 @@ namespace SchoolXam.ViewModels
 	{
         public MatiereAttribDevoirPageViewModel(
 					INavigationService navigationService,
-					IEventAggregator eventAggregator,
 					SchoolRepository db)
-			: base(navigationService, eventAggregator, db)
+			: base(navigationService, db)
 		{
 
         }

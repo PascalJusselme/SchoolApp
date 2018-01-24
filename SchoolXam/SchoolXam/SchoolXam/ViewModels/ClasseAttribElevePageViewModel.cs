@@ -13,9 +13,8 @@ namespace SchoolXam.ViewModels
 	{
 		public ClasseAttribElevePageViewModel(
 					INavigationService navigationService,
-					IEventAggregator eventAggregator,
 					SchoolRepository db)
-			: base(navigationService, eventAggregator, db)
+			: base(navigationService, db)
 		{
 			IsActiveChanged += HandleIsActiveTrue;
 			//IsActiveChanged += HandleIsActiveFalse;

@@ -125,13 +125,10 @@ namespace SchoolXam.ViewModels
 
 		public AnneeDetailPageViewModel(
 			INavigationService navigationService,
-			IEventAggregator eventAggregator,
 			SchoolRepository db)
 			: base(db)
 		{
 			_navigationService = navigationService;
-
-			_eventAggregator = eventAggregator;
 
 			MatiereAttribuable = new List<SelectableData<Matiere>>();
 			ClasseAttribuable = new List<SelectableData<Classe>>();

@@ -20,12 +20,13 @@ namespace SchoolXam.ViewModels.ChildPageViewModel
 	{
 		public ClasseMasterPageViewModel(
 					INavigationService navigationService,
-					IEventAggregator eventAggregator,
 					SchoolRepository db)
-			: base(navigationService,eventAggregator, db)
+			: base(navigationService, db)
 		{
+
 			IsActiveChanged += HandleIsActiveTrue;
 			//IsActiveChanged += HandleIsActiveFalse;
+
 		}
 
 		// Use if there's some code to be executed when the tab is not 

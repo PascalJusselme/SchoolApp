@@ -17,7 +17,6 @@ namespace SchoolXam.ViewModels
 	public class AnneeMasterPageViewModel : BaseViewModel
 	{
 		private readonly INavigationService _navigationService;
-		private readonly IEventAggregator _eventAggregator;
 
 		private ObservableCollection<AnneeScolaire> _annees;
 		public ObservableCollection<AnneeScolaire> Annees
@@ -31,13 +30,10 @@ namespace SchoolXam.ViewModels
 
 		public AnneeMasterPageViewModel(
 					INavigationService navigationService,
-					IEventAggregator eventAggregator,
 					SchoolRepository db)
 		: base(db)
 		{
 			_navigationService = navigationService;
-
-			_eventAggregator = eventAggregator;
 
 			AnneeClicked = new DelegateCommand<AnneeScolaire>(DoAnneeClicked);
 			AddAnneeCommand = new DelegateCommand(AddAnnee);

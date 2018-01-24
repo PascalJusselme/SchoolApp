@@ -16,9 +16,8 @@ namespace SchoolXam.ViewModels
 
 		public MatiereDetailPageViewModel(
 					INavigationService navigationService,
-					IEventAggregator eventAggregator,
 					SchoolRepository db)
-					: base(navigationService, eventAggregator, db)
+					: base(navigationService, db)
 		{
 
 		}

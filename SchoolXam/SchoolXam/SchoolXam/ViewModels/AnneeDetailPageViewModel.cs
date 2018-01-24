@@ -19,6 +19,7 @@ namespace SchoolXam.ViewModels
 	public class AnneeDetailPageViewModel : BaseViewModel, INavigationAware
 	{
 		private readonly INavigationService _navigationService;
+		private readonly IEventAggregator _eventAggregator;
 
 		#region Annee Propertie and Command
 		private AnneeScolaire _annee;
@@ -97,11 +98,11 @@ namespace SchoolXam.ViewModels
 			get { return _classeAttribuable; }
 			set { SetProperty(ref _classeAttribuable, value); }
 		}
-
+		
 		#region Matiere Commands
 		public DelegateCommand<string> AddMatiereCommand { get; set; }
-		public DelegateCommand<Matiere> MatiereItemClicked { get; set; }
-		public DelegateCommand<Matiere> MatiereAttribClasseCommand { get; set; }
+		public DelegateCommand<Matiere> MatiereItemClicked { get; }
+		public DelegateCommand MatiereAttribClasseCommand { get; }
 		#endregion
 
 		#endregion
@@ -120,13 +121,6 @@ namespace SchoolXam.ViewModels
 			get { return _prenomEleve; }
 			set { SetProperty(ref _prenomEleve, value); }
 		}
-
-		//private ObservableCollection<Classe> _listClasseAttribMat;
-		//public ObservableCollection<Classe> ListClasseAttribMat
-		//{
-		//	get { return _listClasseAttribMat; }
-		//	set { SetProperty(ref _listClasseAttribMat, value); }
-		//}
 		#endregion
 
 		public AnneeDetailPageViewModel(
@@ -152,7 +146,7 @@ namespace SchoolXam.ViewModels
 			#region MatiereCommand
 			MatiereItemClicked = new DelegateCommand<Matiere>(DoMatiereClicked);
 			AddMatiereCommand = new DelegateCommand<string>(AddMatiere);
-			MatiereAttribClasseCommand = new DelegateCommand<Matiere>(AttribMatiereClasse);
+			MatiereAttribClasseCommand = new DelegateCommand(AttribMatiereClasse);
 			#endregion
 		}
 
@@ -198,7 +192,7 @@ namespace SchoolXam.ViewModels
 				Title = "Nouvelle Année";
 			}
 		}
-
+		
 		public override void Destroy()
 		{
 
@@ -316,7 +310,7 @@ namespace SchoolXam.ViewModels
 				Matieres = new List<Matiere>(),
 				Eleves = new ObservableCollection<Eleve>()
 			};
-
+			
 			if (IsValidClasse(classe))
 			{
 				// Ajout de la Classe a la liste des Classes de l'Annee
@@ -401,8 +395,6 @@ namespace SchoolXam.ViewModels
 				}
 			}
 
-			//ListClasseAttribMat = new ObservableCollection<Classe>(matiere.Classes);
-
 			return matiere;
 		}
 
@@ -431,9 +423,9 @@ namespace SchoolXam.ViewModels
 								   .Exists(ma => ma.matiereLib == matiere.matiereLib));
 		}
 
-		private void AttribMatiereClasse(Matiere matiere)
+		private void AttribMatiereClasse()
 		{
-			matiere.Classes.Clear();
+			Matiere.Classes.Clear();
 
 			foreach (var data in ClasseAttribuable)
 			{
@@ -441,18 +433,18 @@ namespace SchoolXam.ViewModels
 
 				if (data.Selected)
 				{
-					matiere.Classes.Add(data.Data);
+					Matiere.Classes.Add(data.Data);
 
-					if (!classe.Matieres.Contains(matiere))
+					if (!classe.Matieres.Contains(Matiere))
 					{
-						classe.Matieres.Add(matiere);
+						classe.Matieres.Add(Matiere);
 					}
 				}
 				else
 				{
-					if (classe.Matieres.Contains(matiere))
+					if (classe.Matieres.Contains(Matiere))
 					{
-						classe.Matieres.Remove(matiere);
+						classe.Matieres.Remove(Matiere);
 					}
 				}
 
@@ -462,12 +454,10 @@ namespace SchoolXam.ViewModels
 				}
 			}
 
-			if (matiere.matiereID != 0)
+			if (Matiere.matiereID != 0)
 			{
-				_rep.UpdateMatiere(matiere);
+				_rep.UpdateMatiere(Matiere);
 			}
-
-			//ListClasseAttribMat = new ObservableCollection<Classe>(matiere.Classes);
 		}
 
 		private async void DoMatiereClicked(Matiere matiere)

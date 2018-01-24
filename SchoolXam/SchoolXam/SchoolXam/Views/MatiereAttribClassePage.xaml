@@ -8,7 +8,8 @@
     <StackLayout>
         <Button 
             Text="Attribuer Classe à la Matière"
-            Command="{Binding MatiereAttribClasseCommand}"/>
+            Command="{Binding MatiereAttribClasseCommand}"
+            CommandParameter="{Binding Matiere}"/>
         <ListView 
             x:Name="lstClasses"
             ItemsSource="{Binding ClasseAttribuable}" 

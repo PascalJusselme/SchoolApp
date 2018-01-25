@@ -5,7 +5,8 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="SchoolXam.Views.ClasseAttribElevePage"
              Title="Attribution des Élèves à la classe">
-    <StackLayout>
+    <StackLayout
+             Margin="10,10,10,10">
         <Entry 
             x:Name="txtNomEleve"
             Placeholder="Nom de l'Élève"
@@ -17,34 +18,41 @@
         <Button 
             Text="Ajouter Élèves à la Classe"
             Command="{Binding ClasseAttribEleveCommand}"/>
-        <ListView 
-            x:Name="lstEleves"
-            ItemsSource="{Binding Classe.Eleves}"
-            HasUnevenRows="False">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="50"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Label 
+        <Label 
+            Text="{Binding LabetLstEleve}"
+            XAlign="Center"
+            FontAttributes="Italic"/>
+        <StackLayout
+            x:Name="lstElevesBloc">
+            <ListView 
+                x:Name="lstEleves"
+                ItemsSource="{Binding Classe.Eleves}"
+                HasUnevenRows="False">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="50"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label 
                                 Text="{Binding eleveID}"
                                 Font="15,Bold" />
-                            <Label 
+                                <Label 
                                 Text="{Binding nomEleve}" 
                                 Font="15,Bold" 
                                 Grid.Column="1"/>
-                            <Label 
+                                <Label 
                                 Text="{Binding prenomEleve}" 
                                 Font="15,Bold" 
                                 Grid.Column="2"/>
-                        </Grid>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
     </StackLayout>
 </ContentPage>

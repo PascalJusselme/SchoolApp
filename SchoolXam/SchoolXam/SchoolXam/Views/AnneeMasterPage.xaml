@@ -4,14 +4,17 @@
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="SchoolXam.Views.AnneeMasterPage"
-             Title="AnneeMasterPage">
-    <StackLayout BackgroundColor="Red">
-        <Label 
-            Text="Annees List" />
+             Title="Liste des Années Scolaire ">
+    <StackLayout
+             Margin="10,10,10,10">
         <Button 
             x:Name="btnAddAnnee" 
-            Text="Add" 
+            Text="Ajouter une Année Scolaire" 
             Command="{Binding AddAnneeCommand}" />
+        <Label 
+            Text="{Binding LabetLstAnnees}"
+            XAlign="Center"
+            FontAttributes="Italic"/>
         <ListView 
             x:Name="lstAnnees"
             ItemsSource="{Binding Annees}"
@@ -24,9 +27,9 @@
                                 <ColumnDefinition Width="50"/>
                                 <ColumnDefinition Width="auto"/>
                             </Grid.ColumnDefinitions>
-                            <Label 
+                            <!--<Label 
                                 Text="{Binding anneeID}"
-                                Font="15,Bold" />
+                                Font="15,Bold" />-->
                             <Label 
                                 Text="{Binding anneeLib}" 
                                 Font="15,Bold" 

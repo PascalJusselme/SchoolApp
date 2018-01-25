@@ -1,16 +1,9 @@
 ﻿using Prism.Commands;
-using Prism.Events;
-using Prism.Mvvm;
 using Prism.Navigation;
 using SchoolXam.Data;
-using SchoolXam.Events;
-using SchoolXam.Messages;
 using SchoolXam.Models;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using Xamarin.Forms;
 
 namespace SchoolXam.ViewModels
 {
@@ -25,8 +18,18 @@ namespace SchoolXam.ViewModels
 			set { SetProperty(ref _annees, value); }
 		}
 
-		public DelegateCommand<AnneeScolaire> AnneeClicked { get; set; }
-		public DelegateCommand AddAnneeCommand { get; set; }
+		private DelegateCommand<AnneeScolaire> _selectAnnee;
+		public DelegateCommand<AnneeScolaire> SelectAnnee => _selectAnnee ?? (_selectAnnee = new DelegateCommand<AnneeScolaire>(AnneeSelected));
+		
+		private DelegateCommand _addAnneeCommand;
+		public DelegateCommand AddAnneeCommand => _addAnneeCommand ?? (_addAnneeCommand = new DelegateCommand(AddAnnee));
+
+		private string _labetLstAnnees;
+		public string LabetLstAnnees
+		{
+			get { return _labetLstAnnees; }
+			set { SetProperty(ref _labetLstAnnees, value); }
+		}
 
 		public AnneeMasterPageViewModel(
 					INavigationService navigationService,
@@ -34,26 +37,40 @@ namespace SchoolXam.ViewModels
 		: base(db)
 		{
 			_navigationService = navigationService;
-
-			AnneeClicked = new DelegateCommand<AnneeScolaire>(DoAnneeClicked);
-			AddAnneeCommand = new DelegateCommand(AddAnnee);
 		}
 
-		private async void DoAnneeClicked(AnneeScolaire annee)
+		private async void AnneeSelected(AnneeScolaire annee)
 		{
-			var parameter = new NavigationParameters();
-			parameter.Add("Annee", annee);
+			var parameter = new NavigationParameters
+			{
+				{ "Annee", annee }
+			};
+
 			await _navigationService.NavigateAsync("AnneeDetailPage", parameter);
 		}
 
 		private void GetAnnees()
 		{
 			Annees = new ObservableCollection<AnneeScolaire>(_rep.GetAnnees());
+
+			if (Annees.Count != 0)
+			{
+				LabetLstAnnees = $"Liste des Années Scolaire : "; 
+			}
+			else
+			{
+				LabetLstAnnees = $"Il n'y a aucune Année Scolaire Enregistrée."; 
+			}
 		}
 
 		private async void AddAnnee()
 		{
-			await _navigationService.NavigateAsync("AnneeDetailPage");
+			var parameter = new NavigationParameters
+			{
+				{ "Annee", new AnneeScolaire() }
+			};
+
+			await _navigationService.NavigateAsync("AnneeDetailPage", parameter);
 		}
 
 		public override void OnNavigatedFrom(NavigationParameters parameters)

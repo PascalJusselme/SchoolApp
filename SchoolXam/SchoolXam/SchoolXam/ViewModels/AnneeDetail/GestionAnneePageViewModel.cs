@@ -1,15 +1,6 @@
-﻿using Prism.Commands;
-using Prism.Events;
-using Prism.Mvvm;
-using Prism.Navigation;
-using Prism.Services;
+﻿using Prism.Navigation;
 using SchoolXam.Data;
-using SchoolXam.Models;
-using SchoolXam.ViewModels.ChildPageViewModel;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 
 namespace SchoolXam.ViewModels.ChildPageViewModel
 {

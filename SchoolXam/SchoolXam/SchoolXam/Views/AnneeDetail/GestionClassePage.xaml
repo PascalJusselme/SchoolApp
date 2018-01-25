@@ -5,10 +5,11 @@
              prism:ViewModelLocator.AutowireViewModel="True"             
              x:Class="SchoolXam.Views.GestionClassePage"
              Title="Gestion des Classes de l'Année">
-    <StackLayout>
+    <StackLayout
+             Margin="10,10,10,10">
         <Entry 
             x:Name="txtClasseLib"
-            Placeholder="Libellé Classe"
+            Placeholder="Libellé de la Classe à ajouter"
             Text="{Binding ClasseLib}">
         </Entry>
         <Button

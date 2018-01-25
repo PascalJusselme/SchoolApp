@@ -1,9 +1,4 @@
-﻿using Prism.Common;
-using Prism.Navigation;
-using SchoolXam.Models;
-using SchoolXam.ViewModels;
-using System.Collections.Generic;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 
 namespace SchoolXam.Views
 {

@@ -71,6 +71,14 @@ namespace SchoolXam.Data
 					_conn.Insert(classe);
 				}
 
+				foreach (Eleve eleve in classe.Eleves)
+				{
+					if (eleve.eleveID == 0)
+					{
+						_conn.Insert(eleve);
+					}
+				}
+
 				_conn.UpdateWithChildren(classe);
 			}
 

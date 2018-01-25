@@ -5,7 +5,7 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              xmlns:local="clr-namespace:SchoolXam.Views;assembly=SchoolXam"
              x:Class="SchoolXam.Views.AnneeDetailPage"
-            Title="{Binding Title}">
+            Title="{Binding Annee.anneeLib}">
     <TabbedPage.ToolbarItems>
         <ToolbarItem 
             Text="SaveAnnee" 

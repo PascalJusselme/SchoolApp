@@ -5,11 +5,12 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="SchoolXam.Views.MatiereAttribDevoirPage"
              Title="Attribution des Devoirs à la matière">
-    <StackLayout>
+    <StackLayout
+             Margin="10,10,10,10">
+        <Label 
+            Text="Sélectionnez une Classe :"/>
         <Picker
             ItemsSource="{Binding ListClasseAttribMatiere}"
-            ItemDisplayBinding="{Binding classeLib}">
-            
-        </Picker>
+            ItemDisplayBinding="{Binding classeLib}" />
     </StackLayout>
 </ContentPage>

@@ -1,7 +1,6 @@
 ﻿using Prism.Navigation;
 using SchoolXam.Models;
 using SchoolXam.ViewModels;
-using SchoolXam.ViewModels.ChildPageViewModel;
 using Xamarin.Forms;
 
 namespace SchoolXam.Views
@@ -19,7 +18,7 @@ namespace SchoolXam.Views
 				if (e.SelectedItem is Classe)
 				{
 					var classe = e.SelectedItem as Classe;
-					ViewModel.ClasseItemClicked.Execute(classe);
+					ViewModel.SelectClasse.Execute(classe);
 				}
 			};
 		}

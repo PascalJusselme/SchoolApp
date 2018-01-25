@@ -5,9 +5,9 @@ using Xamarin.Forms;
 
 namespace SchoolXam.Views
 {
-    public partial class AnneeMasterPage : ContentPage, INavigationAware
+    public partial class AnneeMasterPage : ContentPage,INavigationAware
 	{
-		public AnneeMasterPageViewModel ViewModel => BindingContext as AnneeMasterPageViewModel;
+		public AnneeMasterPageViewModel AnneeMasterPageViewModel => BindingContext as AnneeMasterPageViewModel;
 
 		public AnneeMasterPage()
 		{
@@ -18,14 +18,9 @@ namespace SchoolXam.Views
 				if (e.SelectedItem is AnneeScolaire)
 				{
 					var annee = e.SelectedItem as AnneeScolaire;
-					ViewModel.AnneeClicked.Execute(annee);
+					AnneeMasterPageViewModel.SelectAnnee.Execute(annee);
 				}
 			};
-		}
-
-		public void OnNavigatedTo(NavigationParameters parameters)
-		{
-			
 		}
 
 		public void OnNavigatedFrom(NavigationParameters parameters)
@@ -33,9 +28,14 @@ namespace SchoolXam.Views
 			lstAnnees.SelectedItem = null;
 		}
 
+		public void OnNavigatedTo(NavigationParameters parameters)
+		{
+			
+		}
+
 		public void OnNavigatingTo(NavigationParameters parameters)
 		{
-
+			
 		}
 	}
 }

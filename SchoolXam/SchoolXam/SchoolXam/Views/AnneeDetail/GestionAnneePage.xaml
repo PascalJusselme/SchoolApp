@@ -5,10 +5,12 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="SchoolXam.Views.GestionAnneePage"
              Title="Gestion Annee Scolaire">
-    <StackLayout>
+    <StackLayout
+             Margin="10,10,10,10">
         <Entry
             x:Name="AnneeLib"
-            Text="{Binding Annee.anneeLib,Mode=TwoWay}">
+            Text="{Binding Annee.anneeLib, Mode=TwoWay}"
+            Placeholder="Libellé de l'Année Scolaire">
         </Entry>
     </StackLayout>
 </ContentPage>

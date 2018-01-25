@@ -1,13 +1,8 @@
-﻿using Prism.Commands;
-using Prism.Events;
-using Prism.Mvvm;
-using Prism.Navigation;
+﻿using Prism.Navigation;
 using SchoolXam.Data;
 using SchoolXam.Models;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace SchoolXam.ViewModels
 {
@@ -20,7 +15,6 @@ namespace SchoolXam.ViewModels
 		{
 			IsActiveChanged += HandleIsActiveTrue;
 			//IsActiveChanged += HandleIsActiveFalse;
-
 		}
 
 		// Use if there's some code to be executed when the tab is not 

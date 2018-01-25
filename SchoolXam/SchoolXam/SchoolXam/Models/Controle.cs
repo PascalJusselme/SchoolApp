@@ -15,12 +15,12 @@ namespace SchoolXam.Models
 
 		[ForeignKey(typeof(Eleve))]
 		public int eleveID { get; set; }
-		[ManyToOne]
+		[ManyToOne("eleveID")]
 		public Eleve Eleve { get; set; }
 
 		[ForeignKey(typeof(Devoir))]
 		public int devoirID { get; set; }
-		[ManyToOne]
+		[ManyToOne("devoirID")]
 		public Devoir Devoir { get; set; }
 
 	}

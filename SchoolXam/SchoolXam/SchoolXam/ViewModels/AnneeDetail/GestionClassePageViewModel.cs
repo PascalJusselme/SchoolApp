@@ -1,18 +1,6 @@
-﻿using Prism.Commands;
-using Prism.Events;
-using Prism.Mvvm;
-using Prism.Navigation;
-using Prism.Services;
+﻿using Prism.Navigation;
 using SchoolXam.Data;
-using SchoolXam.Events;
-using SchoolXam.Messages;
-using SchoolXam.Models;
-using SchoolXam.ViewModels.ChildPageViewModel;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using Xamarin.Forms;
 
 namespace SchoolXam.ViewModels.ChildPageViewModel
 {
@@ -23,10 +11,8 @@ namespace SchoolXam.ViewModels.ChildPageViewModel
 					SchoolRepository db)
 			: base(navigationService, db)
 		{
-
 			IsActiveChanged += HandleIsActiveTrue;
 			//IsActiveChanged += HandleIsActiveFalse;
-
 		}
 
 		// Use if there's some code to be executed when the tab is not 

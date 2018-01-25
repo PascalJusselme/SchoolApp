@@ -5,7 +5,8 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="SchoolXam.Views.GestionMatierePage"
              Title="Gestion des Matieres de l'Année">
-    <StackLayout>
+    <StackLayout
+             Margin="10,10,10,10">
         <Entry 
             x:Name="txtMatiereLib"
             Placeholder="Libellé Matière"

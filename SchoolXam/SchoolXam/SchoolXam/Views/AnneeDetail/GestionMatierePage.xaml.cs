@@ -1,12 +1,11 @@
 ﻿using Prism.Navigation;
 using SchoolXam.Models;
 using SchoolXam.ViewModels;
-using SchoolXam.ViewModels.ChildPageViewModel;
 using Xamarin.Forms;
 
 namespace SchoolXam.Views
 {
-    public partial class GestionMatierePage : ContentPage, INavigationAware
+	public partial class GestionMatierePage : ContentPage, INavigationAware
 	{
 		public AnneeDetailPageViewModel ViewModel => BindingContext as AnneeDetailPageViewModel;
 
@@ -19,7 +18,7 @@ namespace SchoolXam.Views
 				if (e.SelectedItem is Matiere)
 				{
 					var matiere = e.SelectedItem as Matiere;
-					ViewModel.MatiereItemClicked.Execute(matiere);
+					ViewModel.SelectMatiere.Execute(matiere);
 				}
 			};
 		}

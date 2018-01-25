@@ -1,18 +1,10 @@
 ﻿using Prism.Commands;
-using Prism.Events;
 using Prism.Navigation;
-using Prism.Services;
 using SchoolXam.Data;
-using SchoolXam.Events;
-using SchoolXam.Messages;
 using SchoolXam.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Windows.Input;
-using Xamarin.Forms;
 
 namespace SchoolXam.ViewModels
 {
@@ -62,7 +54,10 @@ namespace SchoolXam.ViewModels
 
 		#region Classe Commands
 		public DelegateCommand<string> AddClasseCommand { get; set; }
-		public DelegateCommand<Classe> ClasseItemClicked { get; }
+
+		private DelegateCommand<Classe> _selectClasse;
+		public DelegateCommand<Classe> SelectClasse => _selectClasse ?? (_selectClasse = new DelegateCommand<Classe>(ClasseSelected));
+
 		public DelegateCommand ClasseAttribMatiereCommand { get; }
 		public DelegateCommand ClasseAttribEleveCommand { get; }
 		#endregion
@@ -107,7 +102,9 @@ namespace SchoolXam.ViewModels
 
 		#region Matiere Commands
 		public DelegateCommand<string> AddMatiereCommand { get; set; }
-		public DelegateCommand<Matiere> MatiereItemClicked { get; }
+
+		private DelegateCommand<Matiere> _selectMatiere;
+		public DelegateCommand<Matiere> SelectMatiere => _selectMatiere ?? (_selectMatiere = new DelegateCommand<Matiere>(MatiereSelected));
 		public DelegateCommand MatiereAttribClasseCommand { get; }
 		#endregion
 
@@ -127,6 +124,20 @@ namespace SchoolXam.ViewModels
 			get { return _prenomEleve; }
 			set { SetProperty(ref _prenomEleve, value); }
 		}
+
+		//private bool _lstElevesIsVisible;
+		//public bool LstElevesIsVisible
+		//{
+		//	get { return _lstElevesIsVisible; }
+		//	set { SetProperty(ref _lstElevesIsVisible, value); }
+		//}
+
+		private string _labetLstEleve;
+		public string LabetLstEleve
+		{
+			get { return _labetLstEleve; }
+			set { SetProperty(ref _labetLstEleve, value); }
+		}
 		#endregion
 
 		public AnneeDetailPageViewModel(
@@ -136,23 +147,15 @@ namespace SchoolXam.ViewModels
 		{
 			_navigationService = navigationService;
 
-			MatiereAttribuable = new List<SelectableData<Matiere>>();
-			ClasseAttribuable = new List<SelectableData<Classe>>();
+			SaveAnneeCommand = new DelegateCommand(SaveAnnee);
 
-			ListClasseAttribMatiere = new ObservableCollection<Classe>();
-
-			SaveAnneeCommand = new DelegateCommand(SaveAnnee).ObservesProperty(() => Annee)
-															 .ObservesProperty(() => Classe)
-															 .ObservesProperty(() => Matiere);
 			#region ClasseCommand
-			ClasseItemClicked = new DelegateCommand<Classe>(DoClasseClicked);
 			AddClasseCommand = new DelegateCommand<string>(AddClasse);
 			ClasseAttribMatiereCommand = new DelegateCommand(AttribClasseMatiere);
 			ClasseAttribEleveCommand = new DelegateCommand(AddEleveClasse);
 			#endregion
 
 			#region MatiereCommand
-			MatiereItemClicked = new DelegateCommand<Matiere>(DoMatiereClicked);
 			AddMatiereCommand = new DelegateCommand<string>(AddMatiere);
 			MatiereAttribClasseCommand = new DelegateCommand(AttribMatiereClasse);
 			#endregion
@@ -174,7 +177,14 @@ namespace SchoolXam.ViewModels
 			{
 				Annee = parameters["Annee"] as AnneeScolaire;
 
-				Annee = GetAnnee(Annee);
+				if (Annee.anneeID == 0)
+				{
+					Annee = GetNewAnnee(Annee);
+				}
+				else
+				{
+					Annee = GetAnnee(Annee);
+				}
 
 				Title = Annee.anneeLib;
 			}
@@ -192,25 +202,16 @@ namespace SchoolXam.ViewModels
 
 				Matiere = GetMatiere(Matiere);
 			}
-
-			if (parameters.Count == 0)
-			{
-				Annee = GetNewAnnee();
-
-				Title = "Nouvelle Année";
-			}
 		}
-		
+
 		public override void Destroy()
 		{
 
 		}
 
 		#region AnneeScolaire
-		private AnneeScolaire GetAnnee(AnneeScolaire Annee)
+		private AnneeScolaire GetAnnee(AnneeScolaire annee)
 		{
-			AnneeScolaire annee = new AnneeScolaire();
-
 			annee = _rep.GetAnnee(Annee);
 
 			annee.Classes = _rep.GetClassesByAnnee(Annee);
@@ -250,10 +251,8 @@ namespace SchoolXam.ViewModels
 			return annee;
 		}
 
-		private AnneeScolaire GetNewAnnee()
+		private AnneeScolaire GetNewAnnee(AnneeScolaire annee)
 		{
-			AnneeScolaire annee = new AnneeScolaire();
-
 			annee.Classes = new List<Classe>();
 			annee.Matieres = new List<Matiere>();
 
@@ -286,25 +285,13 @@ namespace SchoolXam.ViewModels
 		#region Classe
 		private Classe GetClasse(Classe classe)
 		{
-			MatiereAttribuable.Clear();
-
 			Annee = classe.Annee;
 
 			classe = Annee.Classes.Find(cl => cl.classeLib == classe.classeLib);
 
-			foreach (Matiere mat in Annee.Matieres)
-			{
-				MatiereAttribuable.Add(new SelectableData<Matiere>() { Data = mat });
-			}
+			LoadLstMatiereAttribuable(classe);
 
-			if (classe.Matieres.Count != 0)
-			{
-				foreach (Matiere ma in classe.Matieres)
-				{
-					MatiereAttribuable.Find(d => d.Data.matiereLib == ma.matiereLib)
-									  .Selected = true;
-				}
-			}
+			AffichageListeEleve(classe);
 
 			return classe;
 		}
@@ -318,7 +305,7 @@ namespace SchoolXam.ViewModels
 				Matieres = new List<Matiere>(),
 				Eleves = new ObservableCollection<Eleve>()
 			};
-			
+
 			if (IsValidClasse(classe))
 			{
 				// Ajout de la Classe a la liste des Classes de l'Annee
@@ -372,10 +359,32 @@ namespace SchoolXam.ViewModels
 			}
 		}
 
-		private async void DoClasseClicked(Classe classe)
+		private void LoadLstMatiereAttribuable(Classe classe)
 		{
-			var parameter = new NavigationParameters();
-			parameter.Add("Classe", classe);
+			MatiereAttribuable = new List<SelectableData<Matiere>>();
+			
+			foreach (Matiere mat in Annee.Matieres)
+			{
+				MatiereAttribuable.Add(new SelectableData<Matiere>() { Data = mat });
+			}
+
+			if (classe.Matieres.Count != 0)
+			{
+				foreach (Matiere ma in classe.Matieres)
+				{
+					MatiereAttribuable.Find(d => d.Data.matiereLib == ma.matiereLib)
+									  .Selected = true;
+				}
+			}
+		}
+
+		private async void ClasseSelected(Classe classe)
+		{
+			var parameter = new NavigationParameters
+			{
+				{ "Classe", classe }
+			};
+
 			await _navigationService.NavigateAsync("ClasseDetailPage", parameter);
 		}
 		#endregion
@@ -383,25 +392,13 @@ namespace SchoolXam.ViewModels
 		#region Matiere
 		private Matiere GetMatiere(Matiere matiere)
 		{
-			ClasseAttribuable.Clear();
-
 			Annee = matiere.Annee;
 
 			matiere = Annee.Matieres.Find(ma => ma.matiereLib == matiere.matiereLib);
 
-			foreach (Classe cla in Annee.Classes)
-			{
-				ClasseAttribuable.Add(new SelectableData<Classe>() { Data = cla });
-			}
+			ListClasseAttribMatiere = new ObservableCollection<Classe>();
 
-			if (matiere.Classes.Count != 0)
-			{
-				foreach (Classe cl in matiere.Classes)
-				{
-					ClasseAttribuable.Find(d => d.Data.classeLib == cl.classeLib)
-									 .Selected = true;
-				}
-			}
+			LoadLstClasseAttribuable(matiere);
 
 			return matiere;
 		}
@@ -468,10 +465,32 @@ namespace SchoolXam.ViewModels
 			}
 		}
 
-		private async void DoMatiereClicked(Matiere matiere)
+		private void LoadLstClasseAttribuable(Matiere matiere)
 		{
-			var parameter = new NavigationParameters();
-			parameter.Add("Matiere", matiere);
+			ClasseAttribuable = new List<SelectableData<Classe>>();
+
+			foreach (Classe cla in Annee.Classes)
+			{
+				ClasseAttribuable.Add(new SelectableData<Classe>() { Data = cla });
+			}
+
+			if (matiere.Classes.Count != 0)
+			{
+				foreach (Classe cl in matiere.Classes)
+				{
+					ClasseAttribuable.Find(d => d.Data.classeLib == cl.classeLib)
+									 .Selected = true;
+				}
+			}
+		}
+
+		private async void MatiereSelected(Matiere matiere)
+		{
+			var parameter = new NavigationParameters
+			{
+				{ "Matiere", matiere }
+			};
+
 			await _navigationService.NavigateAsync("MatiereDetailPage", parameter);
 		}
 		#endregion
@@ -488,6 +507,20 @@ namespace SchoolXam.ViewModels
 
 			//Ajout de l'Eleve a la Classe en cours de Gestion
 			Classe.Eleves.Add(el);
+
+			AffichageListeEleve(Classe);
+		}
+
+		private void AffichageListeEleve(Classe classe)
+		{
+			if (classe.Eleves.Count != 0)
+			{
+				LabetLstEleve = $"Liste des Élèves de la Classe : {classe.classeLib}"; /*pour l'Année Scolaire {classe.Annee.anneeLib}";*/
+			}
+			else
+			{
+				LabetLstEleve = $"Il n'y a aucun Élève dans la Classe : {classe.classeLib}"; /*pour l'Année Scolaire {classe.Annee.anneeLib}";*/
+			}
 		}
 		#endregion
 

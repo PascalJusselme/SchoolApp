@@ -1,19 +1,11 @@
-﻿using Prism.Commands;
-using Prism.Events;
-using Prism.Mvvm;
-using Prism.Navigation;
+﻿using Prism.Navigation;
 using SchoolXam.Data;
 using SchoolXam.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SchoolXam.ViewModels
 {
 	public class MatiereDetailPageViewModel : AnneeDetailPageViewModel
 	{
-		public Matiere mat { get; private set; }
-
 		public MatiereDetailPageViewModel(
 					INavigationService navigationService,
 					SchoolRepository db)
@@ -38,7 +30,7 @@ namespace SchoolXam.ViewModels
 			{
 				Matiere = parameters["Matiere"] as Matiere;
 
-				SubTitle = Matiere.matiereLib;
+				SubTitle = $"Matiere : {Matiere.matiereLib}";
 			}
 		}
 

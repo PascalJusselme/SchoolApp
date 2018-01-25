@@ -5,7 +5,8 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="SchoolXam.Views.MatiereAttribClassePage"
              Title="Attribution des Classes à la matière">
-    <StackLayout>
+    <StackLayout
+             Margin="10,10,10,10">
         <Button 
             Text="Attribuer Classe à la Matière"
             Command="{Binding MatiereAttribClasseCommand}"/>

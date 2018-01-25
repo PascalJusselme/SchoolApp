@@ -1,9 +1,8 @@
-﻿using SchoolXam.ViewModels;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 
 namespace SchoolXam.Views
 {
-    public partial class MatiereAttribDevoirPage : ContentPage
+	public partial class MatiereAttribDevoirPage : ContentPage
     {
 		public MatiereAttribDevoirPage()
         {

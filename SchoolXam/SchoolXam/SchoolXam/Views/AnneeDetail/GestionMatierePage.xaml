@@ -2,25 +2,22 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
-             prism:ViewModelLocator.AutowireViewModel="True"             
-             xmlns:local="clr-namespace:SchoolXam.Behaviors;assembly=SchoolXam"
-             xmlns:converter="clr-namespace:SchoolXam.Converters;assembly=SchoolXam"
-             x:Class="SchoolXam.Views.ClasseMasterPage"
-             Title="Gestion des Classes de l'Année">
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="SchoolXam.Views.GestionMatierePage"
+             Title="Gestion des Matieres de l'Année">
     <StackLayout>
         <Entry 
-            x:Name="txtClasseLib"
-            Placeholder="Libellé Classe"
-            Text="{Binding ClasseLib}">
-        </Entry>
+            x:Name="txtMatiereLib"
+            Placeholder="Libellé Matière"
+            Text="{Binding MatiereLib}"/>
         <Button
-            x:Name="btnAddClasse"
-            Text="Add Classe"
-            Command="{Binding AddClasseCommand}"
-            CommandParameter="{Binding ClasseLib}"/>
+            x:Name="btnAddMatiere"
+            Text="Add Matiere"
+            Command="{Binding AddMatiereCommand}"
+            CommandParameter="{Binding MatiereLib}"/>
         <ListView 
-            x:Name="lstClasses"
-            ItemsSource="{Binding ListClasses}"
+            x:Name="lstMatieres"
+            ItemsSource="{Binding ListMatieres}"
             HasUnevenRows="True">
             <ListView.ItemTemplate>
                 <DataTemplate>
@@ -31,16 +28,16 @@
                                 <ColumnDefinition Width="auto"/>
                             </Grid.ColumnDefinitions>
                             <Label 
-                                Text="{Binding classeID}"
+                                Text="{Binding matiereID}"
                                 Font="15,Bold" />
                             <Label 
-                                Text="{Binding classeLib}" 
+                                Text="{Binding matiereLib}" 
                                 Font="15,Bold" 
                                 Grid.Column="1" />
                         </Grid>
                     </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
-        </ListView>        
+        </ListView>
     </StackLayout>
 </ContentPage>

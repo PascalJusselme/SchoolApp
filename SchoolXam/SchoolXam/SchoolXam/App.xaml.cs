@@ -33,13 +33,13 @@ namespace SchoolXam
 			Container.RegisterTypeForNavigation<AnneeDetailPage>();
 
 			Container.RegisterTypeForNavigation<GestionAnneePage>();
+			Container.RegisterTypeForNavigation<GestionClassePage>();
+			Container.RegisterTypeForNavigation<GestionMatierePage>();
 
-			Container.RegisterTypeForNavigation<ClasseMasterPage>();
 			Container.RegisterTypeForNavigation<ClasseDetailPage>();
 			Container.RegisterTypeForNavigation<ClasseAttribMatierePage>();
 			Container.RegisterTypeForNavigation<ClasseAttribElevePage>();
 
-			Container.RegisterTypeForNavigation<MatiereMasterPage>();
 			Container.RegisterTypeForNavigation<MatiereDetailPage>();
 			Container.RegisterTypeForNavigation<MatiereAttribClassePage>();
 			Container.RegisterTypeForNavigation<MatiereAttribDevoirPage>();

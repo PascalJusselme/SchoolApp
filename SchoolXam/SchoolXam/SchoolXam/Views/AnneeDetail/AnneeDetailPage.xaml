@@ -12,6 +12,6 @@
             Command="{Binding SaveAnneeCommand} "/>
     </TabbedPage.ToolbarItems>
     <local:GestionAnneePage/>
-    <local:ClasseMasterPage/>
-    <local:MatiereMasterPage/>
+    <local:GestionClassePage/>
+    <local:GestionMatierePage/>
 </TabbedPage>

@@ -29,20 +29,20 @@
     <Compile Update="Views\AnneeMasterPage.xaml.cs">
       <DependentUpon>AnneeMasterPage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\AnneeDetailPage.xaml.cs">
+    <Compile Update="Views\AnneeDetail\AnneeDetailPage.xaml.cs">
       <DependentUpon>AnneeDetailPage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\ClasseAttribMatierePage.xaml.cs">
+    <Compile Update="Views\AnneeDetail\ClasseDetail\ClasseAttribMatierePage.xaml.cs">
       <DependentUpon>ClasseAttribMatierePage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\GestionAnneePage.xaml.cs">
+    <Compile Update="Views\AnneeDetail\GestionAnneePage.xaml.cs">
       <DependentUpon>GestionAnneePage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\ClasseMasterPage.xaml.cs">
-      <DependentUpon>ClasseMasterPage.xaml</DependentUpon>
+    <Compile Update="Views\AnneeDetail\GestionClassePage.xaml.cs">
+      <DependentUpon>GestionClassePage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\MatiereMasterPage.xaml.cs">
-      <DependentUpon>MatiereMasterPage.xaml</DependentUpon>
+    <Compile Update="Views\AnneeDetail\GestionMatierePage.xaml.cs">
+      <DependentUpon>GestionMatierePage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 
@@ -50,36 +50,45 @@
     <EmbeddedResource Update="Views\AnneeMasterPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\ClasseAttribElevePage.xaml">
+    <EmbeddedResource Update="Views\AnneeDetail\ClasseDetail\ClasseAttribElevePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\ClasseAttribMatierePage.xaml">
+    <EmbeddedResource Update="Views\AnneeDetail\ClasseDetail\ClasseAttribMatierePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\MatiereAttribClassePage.xaml">
+    <EmbeddedResource Update="Views\AnneeDetail\MatiereDetail\MatiereAttribClassePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\MatiereAttribDevoirPage.xaml">
+    <EmbeddedResource Update="Views\AnneeDetail\MatiereDetail\MatiereAttribDevoirPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\MatiereDetailPage.xaml">
+    <EmbeddedResource Update="Views\AnneeDetail\MatiereDetail\MatiereDetailPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\MatiereMasterPage.xaml">
+    <EmbeddedResource Update="Views\AnneeDetail\GestionMatierePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\ClasseDetailPage.xaml">
+    <EmbeddedResource Update="Views\AnneeDetail\ClasseDetail\ClasseDetailPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\AnneeDetailPage.xaml">
+    <EmbeddedResource Update="Views\AnneeDetail\AnneeDetailPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\GestionAnneePage.xaml">
+    <EmbeddedResource Update="Views\AnneeDetail\GestionAnneePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\ClasseMasterPage.xaml">
+    <EmbeddedResource Update="Views\AnneeDetail\GestionClassePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Behaviors\" />
+    <Folder Include="Converters\" />
+    <Folder Include="Effects\" />
+    <Folder Include="Events\" />
+    <Folder Include="Messages\" />
+    <Folder Include="Validation\" />
   </ItemGroup>
 
 </Project>

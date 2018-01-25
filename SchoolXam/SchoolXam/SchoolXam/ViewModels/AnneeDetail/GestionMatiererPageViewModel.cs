@@ -4,26 +4,19 @@ using Prism.Mvvm;
 using Prism.Navigation;
 using Prism.Services;
 using SchoolXam.Data;
-using SchoolXam.Events;
-using SchoolXam.Messages;
-using SchoolXam.Models;
-using SchoolXam.ViewModels.ChildPageViewModel;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using Xamarin.Forms;
 
 namespace SchoolXam.ViewModels.ChildPageViewModel
 {
-	public class ClasseMasterPageViewModel : ChildTabbedPageViewModel
+	public class GestionMatiererPageViewModel : ChildTabbedPageViewModel
 	{
-		public ClasseMasterPageViewModel(
+		public GestionMatiererPageViewModel(
 					INavigationService navigationService,
 					SchoolRepository db)
 			: base(navigationService, db)
 		{
-
 			IsActiveChanged += HandleIsActiveTrue;
 			//IsActiveChanged += HandleIsActiveFalse;
 

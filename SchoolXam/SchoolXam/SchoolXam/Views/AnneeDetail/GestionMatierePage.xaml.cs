@@ -6,20 +6,20 @@ using Xamarin.Forms;
 
 namespace SchoolXam.Views
 {
-	public partial class ClasseMasterPage : ContentPage, INavigationAware
+    public partial class GestionMatierePage : ContentPage, INavigationAware
 	{
 		public AnneeDetailPageViewModel ViewModel => BindingContext as AnneeDetailPageViewModel;
 
-		public ClasseMasterPage()
-		{
-			InitializeComponent();
-
-			lstClasses.ItemSelected += (o, e) =>
+		public GestionMatierePage()
+        {
+            InitializeComponent(); 
+			
+			lstMatieres.ItemSelected += (o, e) =>
 			{
-				if (e.SelectedItem is Classe)
+				if (e.SelectedItem is Matiere)
 				{
-					var classe = e.SelectedItem as Classe;
-					ViewModel.ClasseItemClicked.Execute(classe);
+					var matiere = e.SelectedItem as Matiere;
+					ViewModel.MatiereItemClicked.Execute(matiere);
 				}
 			};
 		}
@@ -31,7 +31,7 @@ namespace SchoolXam.Views
 
 		public void OnNavigatedFrom(NavigationParameters parameters)
 		{
-			lstClasses.SelectedItem = null;
+			lstMatieres.SelectedItem = null;
 		}
 
 		public void OnNavigatingTo(NavigationParameters parameters)

@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace SchoolXam.ViewModels
 {
-	public class MatiereDetailPageViewModel : ChildTabbedPageViewModel
+	public class MatiereDetailPageViewModel : AnneeDetailPageViewModel
 	{
 		public Matiere mat { get; private set; }
 
@@ -29,17 +29,17 @@ namespace SchoolXam.ViewModels
 
 		public override void OnNavigatedTo(NavigationParameters parameters)
 		{
-			if (parameters != null && parameters.ContainsKey("Matiere"))
-			{
-				mat = parameters["Matiere"] as Matiere;
-
-				SubTitle = mat.matiereLib;
-			}
+			
 		}
 
 		public override void OnNavigatingTo(NavigationParameters parameters)
 		{
+			if (parameters != null && parameters.ContainsKey("Matiere"))
+			{
+				Matiere = parameters["Matiere"] as Matiere;
 
+				SubTitle = Matiere.matiereLib;
+			}
 		}
 
 		public override void Destroy()

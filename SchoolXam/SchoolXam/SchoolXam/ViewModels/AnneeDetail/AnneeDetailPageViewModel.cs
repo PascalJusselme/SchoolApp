@@ -19,7 +19,6 @@ namespace SchoolXam.ViewModels
 	public class AnneeDetailPageViewModel : BaseViewModel, INavigationAware
 	{
 		private readonly INavigationService _navigationService;
-		private readonly IEventAggregator _eventAggregator;
 
 		#region Annee Propertie and Command
 		private AnneeScolaire _annee;
@@ -98,7 +97,14 @@ namespace SchoolXam.ViewModels
 			get { return _classeAttribuable; }
 			set { SetProperty(ref _classeAttribuable, value); }
 		}
-		
+
+		private ObservableCollection<Classe> _listClasseAttribMatiere;
+		public ObservableCollection<Classe> ListClasseAttribMatiere
+		{
+			get { return _listClasseAttribMatiere; }
+			set { SetProperty(ref _listClasseAttribMatiere, value); }
+		}
+
 		#region Matiere Commands
 		public DelegateCommand<string> AddMatiereCommand { get; set; }
 		public DelegateCommand<Matiere> MatiereItemClicked { get; }
@@ -132,6 +138,8 @@ namespace SchoolXam.ViewModels
 
 			MatiereAttribuable = new List<SelectableData<Matiere>>();
 			ClasseAttribuable = new List<SelectableData<Classe>>();
+
+			ListClasseAttribMatiere = new ObservableCollection<Classe>();
 
 			SaveAnneeCommand = new DelegateCommand(SaveAnnee).ObservesProperty(() => Annee)
 															 .ObservesProperty(() => Classe)

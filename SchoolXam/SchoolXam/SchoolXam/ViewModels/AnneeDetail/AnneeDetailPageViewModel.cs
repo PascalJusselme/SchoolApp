@@ -407,6 +407,16 @@ namespace SchoolXam.ViewModels
 						matiere.Classes.Remove(Classe);
 					}
 				}
+
+				if (matiere.matiereID != 0)
+				{
+					_rep.UpdateMatiere(matiere);
+				}
+			}
+
+			if (Classe.classeID != 0)
+			{
+				_rep.UpdateClasse(Classe);
 			}
 		}
 
@@ -513,6 +523,16 @@ namespace SchoolXam.ViewModels
 						classe.Matieres.Remove(Matiere);
 					}
 				}
+
+				if (classe.classeID != 0)
+				{
+					_rep.UpdateClasse(classe);
+				}
+			}
+
+			if (Matiere.matiereID != 0)
+			{
+				_rep.UpdateMatiere(Matiere);
 			}
 		}
 

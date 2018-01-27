@@ -37,13 +37,13 @@ namespace SchoolXam.ViewModels
 			IsActiveChanged -= HandleIsActiveTrue;
 			//IsActiveChanged -= HandleIsActiveFalse;
 			
-			foreach (Classe classe in Matiere.Classes)
-			{
-				if (classe.Matieres.Find(ma => ma.matiereLib == Matiere.matiereLib) == null)
-				{
-					classe.Matieres.Add(Matiere);
-				}
-			}
+			//foreach (Classe classe in Matiere.Classes)
+			//{
+			//	if (classe.Matieres.Find(ma => ma.matiereLib == Matiere.matiereLib) == null)
+			//	{
+			//		classe.Matieres.Add(Matiere);
+			//	}
+			//}
 		}
 
 		// Use the INavigationAware methods (OnNavigatedTo, OnNavigedFrom, OnNavigatingTo)

@@ -1,5 +1,6 @@
 ﻿using Prism.Navigation;
 using SchoolXam.Data;
+using SchoolXam.Models;
 using System;
 
 namespace SchoolXam.ViewModels

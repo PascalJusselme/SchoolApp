@@ -45,18 +45,17 @@ namespace SchoolXam.ViewModels
 			set { SetProperty(ref _classeLib, value); }
 		}
 
-		private List<SelectableData<Matiere>> _matiereAttribuable;
-		public List<SelectableData<Matiere>> MatiereAttribuable
+		private List<SelectableData<Matiere>> _matiereAttribuableToClasse;
+		public List<SelectableData<Matiere>> MatiereAttribuableToClasse
 		{
-			get { return _matiereAttribuable; }
-			set { SetProperty(ref _matiereAttribuable, value); }
+			get { return _matiereAttribuableToClasse; }
+			set { SetProperty(ref _matiereAttribuableToClasse, value); }
 		}
 
 		#region Classe Commands
 		public DelegateCommand<string> AddClasseCommand => new DelegateCommand<string>(AddClasse);
 		public DelegateCommand<Classe> SelectClasse => new DelegateCommand<Classe>(ClasseSelected);
-		public DelegateCommand ClasseAttribMatiereCommand => new DelegateCommand(AttribClasseMatiere);
-		public DelegateCommand ClasseAttribEleveCommand => new DelegateCommand(AddEleveClasse);
+		public DelegateCommand AttribMatiereToClasseCommand => new DelegateCommand(AttribClasseMatiere);
 		#endregion
 
 		#endregion
@@ -90,13 +89,34 @@ namespace SchoolXam.ViewModels
 			set { SetProperty(ref _classeAttribuable, value); }
 		}
 
-		private ObservableCollection<Classe> _listClasseAttribMatiere;
-		public ObservableCollection<Classe> ListClasseAttribMatiere
+		private ObservableCollection<Classe> _listPickClasseMatiere;
+		public ObservableCollection<Classe> ListPickClasseMatiere
 		{
-			get { return _listClasseAttribMatiere; }
-			set { SetProperty(ref _listClasseAttribMatiere, value); }
+			get { return _listPickClasseMatiere; }
+			set { SetProperty(ref _listPickClasseMatiere, value); }
 		}
 
+		private Classe _selectClassePicker;
+		public Classe SelectClassePicker
+		{
+			get { return _selectClassePicker; }
+			set
+			{
+				SetProperty(ref _selectClassePicker, value);
+
+				if (_selectClassePicker != null)
+				{
+					BlocDevoirVisible = true;
+					ListDevoirs = GetListDevoirs_ClasseMatiere(LoadClasse(_selectClassePicker), Matiere);
+				}
+				else
+				{
+					BlocDevoirVisible = false;
+				}
+			}
+		}
+
+<<<<<<< HEAD
 		private Classe _selectClassePicker;
 		public Classe SelectClassePicker
 		{
@@ -121,6 +141,12 @@ namespace SchoolXam.ViewModels
 		public DelegateCommand<string> AddMatiereCommand => new DelegateCommand<string>(AddMatiere);
 		public DelegateCommand<Matiere> SelectMatiere => new DelegateCommand<Matiere>(MatiereSelected);
 		public DelegateCommand MatiereAttribClasseCommand => new DelegateCommand(AttribMatiereClasse);
+=======
+		#region Matiere Commands
+		public DelegateCommand<string> AddMatiereCommand { get; set; }
+		public DelegateCommand<Matiere> SelectMatiere { get; set; }
+		public DelegateCommand AttribClasseToMatiereCommand { get; set; }
+>>>>>>> Refresh solution
 		#endregion
 
 		#endregion
@@ -153,6 +179,14 @@ namespace SchoolXam.ViewModels
 			get { return _labelLstEleve; }
 			set { SetProperty(ref _labelLstEleve, value); }
 		}
+<<<<<<< HEAD
+=======
+
+		#region Eleve Commands
+		public DelegateCommand AddEleveToClasseCommand { get; set; }
+		#endregion
+
+>>>>>>> Refresh solution
 		#endregion
 
 		#region Devoir Properties
@@ -192,8 +226,14 @@ namespace SchoolXam.ViewModels
 		}
 
 		#region Devoir Commands
+<<<<<<< HEAD
 		public DelegateCommand AddDevoirCommand => new DelegateCommand(AddDevoirClasseMatiere);
 		#endregion
+=======
+		public DelegateCommand AddDevoirCommand { get; set; }
+		#endregion
+
+>>>>>>> Refresh solution
 		#endregion
 
 		public AnneeDetailPageViewModel(
@@ -201,9 +241,9 @@ namespace SchoolXam.ViewModels
 			SchoolRepository db)
 			: base(db)
 		{
-			_navigationService = navigationService;
-
 			ListDevoirs = new ObservableCollection<Devoir>();
+
+			_navigationService = navigationService;
 		}
 
 		public override void OnNavigatedFrom(NavigationParameters parameters)
@@ -257,47 +297,57 @@ namespace SchoolXam.ViewModels
 			if (annee.anneeID == 0)
 			{
 				annee.anneeLib = string.Empty;
+				annee.Classes = new List<Classe>();
+				annee.Matieres = new List<Matiere>();
 			}
 			else
 			{
 				annee = _rep.GetAnnee(annee);
+
+				annee.Classes = _rep.GetClassesByAnnee(annee);
+				annee.Matieres = _rep.GetMatieresByAnnee(annee);
+
+				foreach (Classe classe in annee.Classes)
+				{
+					Classe cl = new Classe();
+					cl = _rep.GetClasse(classe);
+
+					classe.Annee = annee;
+					classe.Matieres = new List<Matiere>(cl.Matieres);
+					classe.Eleves = new List<Eleve>(cl.Eleves);
+					classe.Devoirs = new List<Devoir>(cl.Devoirs);
+				}
+
+				foreach (Matiere matiere in annee.Matieres)
+				{
+					Matiere ma = new Matiere();
+					ma = _rep.GetMatiere(matiere);
+
+					matiere.Annee = annee;
+					matiere.Classes = new List<Classe>(ma.Classes);
+					matiere.Devoirs = new List<Devoir>(ma.Devoirs);
+				}
 			}
 
-			annee.Classes = _rep.GetClassesByAnnee(annee);
 			ListClasses = new ObservableCollection<Classe>(annee.Classes);
-
-			foreach (Classe classe in annee.Classes)
-			{
-				Classe cl = new Classe();
-				cl = _rep.GetClasse(classe);
-
-				classe.Annee = annee;
-				classe.Matieres = new List<Matiere>(cl.Matieres);
-				classe.Eleves = new List<Eleve>(cl.Eleves);
-				classe.Devoirs = new List<Devoir>(cl.Devoirs);
-			}
-
-			annee.Matieres = _rep.GetMatieresByAnnee(annee);
 			ListMatieres = new ObservableCollection<Matiere>(annee.Matieres);
-
-			foreach (Matiere matiere in annee.Matieres)
-			{
-				Matiere ma = new Matiere();
-				ma = _rep.GetMatiere(matiere);
-
-				matiere.Annee = annee;
-				matiere.Classes = new List<Classe>(ma.Classes);
-				matiere.Devoirs = new List<Devoir>(ma.Devoirs);
-			}
 
 			return annee;
 		}
 
 		private async void SaveAnnee()
 		{
-			_rep.SaveAnnee(Annee);
+			//if (IsValidAnnee(Annee))
+			//{
+				_rep.SaveAnnee(Annee);
+			//}
 
 			await _navigationService.GoBackToRootAsync();
+		}
+
+		private bool IsValidAnnee(AnneeScolaire annee)
+		{
+			return (!String.IsNullOrEmpty(annee.anneeLib));
 		}
 		#endregion
 
@@ -351,11 +401,11 @@ namespace SchoolXam.ViewModels
 								  .Exists(cl => cl.classeLib == classe.classeLib));
 		}
 
-		private void AttribClasseMatiere()
+		private void AttribMatiereToClasse()
 		{
 			Classe.Matieres.Clear();
 
-			foreach (var data in MatiereAttribuable)
+			foreach (var data in MatiereAttribuableToClasse)
 			{
 				Matiere matiere = data.Data;
 
@@ -363,14 +413,14 @@ namespace SchoolXam.ViewModels
 				{
 					Classe.Matieres.Add(data.Data);
 
-					if (!matiere.Classes.Contains(Classe))
+					if (matiere.Classes.Find(cl => cl.classeLib == Classe.classeLib) == null)
 					{
 						matiere.Classes.Add(Classe);
 					}
 				}
 				else
 				{
-					if (matiere.Classes.Contains(Classe))
+					if (matiere.Classes.Find(cl => cl.classeLib == Classe.classeLib) != null)
 					{
 						matiere.Classes.Remove(Classe);
 					}
@@ -380,18 +430,18 @@ namespace SchoolXam.ViewModels
 
 		private void LoadLstMatiereAttribuable(Classe classe)
 		{
-			MatiereAttribuable = new List<SelectableData<Matiere>>();
+			MatiereAttribuableToClasse = new List<SelectableData<Matiere>>();
 
 			foreach (Matiere mat in Annee.Matieres)
 			{
-				MatiereAttribuable.Add(new SelectableData<Matiere>() { Data = mat });
+				MatiereAttribuableToClasse.Add(new SelectableData<Matiere>() { Data = mat });
 			}
 
 			if (classe.Matieres.Count != 0)
 			{
 				foreach (Matiere ma in classe.Matieres)
 				{
-					MatiereAttribuable.Find(d => d.Data.matiereLib == ma.matiereLib)
+					MatiereAttribuableToClasse.Find(d => d.Data.matiereLib == ma.matiereLib)
 									  .Selected = true;
 				}
 			}
@@ -409,15 +459,22 @@ namespace SchoolXam.ViewModels
 		#endregion
 
 		#region Matiere
+		private Matiere LoadMatiere(Matiere matiere)
+		{
+			Matiere ma = Annee.Matieres.Find(m => m.matiereLib == matiere.matiereLib);
+
+			return ma;
+		}
+
 		private Matiere GetMatiere(Matiere matiere)
 		{
 			Annee = matiere.Annee;
 
 			matiere = Annee.Matieres.Find(ma => ma.matiereLib == matiere.matiereLib);
 
-			ListClasseAttribMatiere = new ObservableCollection<Classe>();
-
 			LoadLstClasseAttribuable(matiere);
+
+			ListPickClasseMatiere = new ObservableCollection<Classe>(Matiere.Classes);
 
 			return matiere;
 		}
@@ -448,7 +505,7 @@ namespace SchoolXam.ViewModels
 								   .Exists(ma => ma.matiereLib == matiere.matiereLib));
 		}
 
-		private void AttribMatiereClasse()
+		private void AttribClasseToMatiere()
 		{
 			Matiere.Classes.Clear();
 
@@ -506,7 +563,7 @@ namespace SchoolXam.ViewModels
 		#endregion
 
 		#region Eleve
-		private void AddEleveClasse()
+		private void AddEleveToClasse()
 		{
 			Eleve eleve = new Eleve
 			{
@@ -532,6 +589,7 @@ namespace SchoolXam.ViewModels
 								 .Eleves
 								 .Exists(el => el.nomEleve == eleve.nomEleve
 										    && el.prenomEleve == eleve.prenomEleve)
+											&& el.prenomEleve == eleve.prenomEleve)
 					);
 		}
 
@@ -539,12 +597,12 @@ namespace SchoolXam.ViewModels
 		{
 			if (classe.Eleves.Count != 0)
 			{
-				LabelLstEleve = $"Liste des Élèves de la Classe : {classe.classeLib}"; /*pour l'Année Scolaire {classe.Annee.anneeLib}";*/
-			}
+				LabelLstEleve = $"Liste des Élèves de la Classe : {classe.classeLib}"; 
+				}
 			else
 			{
-				LabelLstEleve = $"Il n'y a aucun Élève dans la Classe : {classe.classeLib}"; /*pour l'Année Scolaire {classe.Annee.anneeLib}";*/
-			}
+				LabelLstEleve = $"Il n'y a aucun Élève dans la Classe : {classe.classeLib}"; 
+				}
 		}
 		#endregion
 

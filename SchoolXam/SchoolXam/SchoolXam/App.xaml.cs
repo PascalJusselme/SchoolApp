@@ -3,6 +3,8 @@ using SchoolXam.Views;
 using Prism.Unity;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using SchoolXam.Data;
+using SchoolXam.Abstractions;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace SchoolXam

@@ -9,7 +9,7 @@
              Margin="10,10,10,10">
         <Button 
             Text="Attribuer Classe(s)"
-            Command="{Binding MatiereAttribClasseCommand}"/>
+            Command="{Binding AttribClasseToMatiereCommand}"/>
         <ListView 
             x:Name="lstClasses"
             ItemsSource="{Binding ClasseAttribuable}" 
@@ -23,9 +23,6 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="auto"/>
                             </Grid.ColumnDefinitions>
-                            <!--<Label 
-                                Text="{Binding Data.classeID}"
-                                Font="15,Bold" />-->
                             <Label 
                                 Text="{Binding Data.classeLib}" 
                                 Font="15,Bold" 

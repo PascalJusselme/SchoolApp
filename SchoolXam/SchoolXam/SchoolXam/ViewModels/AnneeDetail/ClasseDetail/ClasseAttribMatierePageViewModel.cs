@@ -1,5 +1,6 @@
 ﻿using Prism.Navigation;
 using SchoolXam.Data;
+using SchoolXam.Models;
 using System;
 
 namespace SchoolXam.ViewModels
@@ -19,7 +20,7 @@ namespace SchoolXam.ViewModels
 		// the active
 		//private void HandleIsActiveFalse(object sender, EventArgs e)
 		//{
-		//    if (IsActive == true) return;
+		//	if (IsActive == true) return;
 		//}
 
 		// Use if there's some code to be executed when the tab is the active tab
@@ -32,6 +33,14 @@ namespace SchoolXam.ViewModels
 		{
 			IsActiveChanged -= HandleIsActiveTrue;
 			//IsActiveChanged -= HandleIsActiveFalse;
+
+			foreach (Matiere matiere in Classe.Matieres)
+			{
+				if (matiere.Classes.Find(cl => cl.classeLib == Classe.classeLib) == null)
+				{
+					matiere.Classes.Add(Classe);
+				}
+			}
 		}
 
 		// Use the INavigationAware methods (OnNavigatedTo, OnNavigedFrom, OnNavigatingTo)

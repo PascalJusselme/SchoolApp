@@ -44,24 +44,18 @@ namespace SchoolXam.Data
 
 		public AnneeScolaire GetAnnee(AnneeScolaire annee)
 		{
-			return _conn.Table<AnneeScolaire>().First(an => an.anneeID == annee.anneeID);
+			return _conn.Table<AnneeScolaire>().First(an => an.anneeLib == annee.anneeLib);
 		}
 
 		public void SaveAnnee(AnneeScolaire annee)
 		{
-			int anID;
-
 			if (annee.anneeID == 0)
 			{
 				_conn.InsertWithChildren(annee);
-
-				anID = annee.anneeID;
 			}
 			else
 			{
 				_conn.UpdateWithChildren(annee);
-
-				anID = annee.anneeID;
 			}
 
 			foreach (Classe classe in annee.Classes)
@@ -71,13 +65,25 @@ namespace SchoolXam.Data
 					_conn.Insert(classe);
 				}
 
-				foreach (Eleve eleve in classe.Eleves)
-				{
-					if (eleve.eleveID == 0)
-					{
-						_conn.Insert(eleve);
-					}
-				}
+				//foreach (Eleve eleve in classe.Eleves)
+				//{
+				//	if (eleve.eleveID == 0)
+				//	{
+				//		_conn.Insert(eleve);
+				//	}
+
+				//	_conn.UpdateWithChildren(eleve);
+				//}
+
+				//foreach (Devoir devoir in classe.Devoirs)
+				//{
+				//	if (devoir.devoirID == 0)
+				//	{
+				//		_conn.Insert(devoir);
+				//	}
+					
+				//	_conn.UpdateWithChildren(devoir);
+				//}
 
 				foreach (Devoir	devoir in classe.Devoirs)
 				{

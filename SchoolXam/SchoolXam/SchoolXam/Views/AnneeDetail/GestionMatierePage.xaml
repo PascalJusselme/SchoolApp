@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
-             prism:ViewModelLocator.AutowireViewModel="True"
+             prism:ViewModelLocator.AutowireViewModel="False"
              x:Class="SchoolXam.Views.GestionMatierePage"
              Title="Gestion des Matieres de l'Année">
     <StackLayout
@@ -30,9 +30,6 @@
                                 <ColumnDefinition Width="50"/>
                                 <ColumnDefinition Width="auto"/>
                             </Grid.ColumnDefinitions>
-                            <!--<Label 
-                                Text="{Binding matiereID}"
-                                Font="15,Bold" />-->
                             <Label 
                                 Text="{Binding matiereLib}" 
                                 Font="15,Bold" 

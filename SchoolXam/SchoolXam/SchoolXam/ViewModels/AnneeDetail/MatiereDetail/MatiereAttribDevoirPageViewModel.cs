@@ -28,8 +28,8 @@ namespace SchoolXam.ViewModels
 		private void HandleIsActiveTrue(object sender, EventArgs e)
 		{
 			if (IsActive == false) return;
-			
-			ListClasseAttribMatiere = new ObservableCollection<Classe>(Matiere.Classes);
+
+			ListPickClasseMatiere = new ObservableCollection<Classe>(Matiere.Classes);
 		}
 
 		public override void Destroy()

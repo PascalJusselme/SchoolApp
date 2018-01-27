@@ -4,16 +4,15 @@ using System;
 
 namespace SchoolXam.ViewModels
 {
-	public class GestionAnneePageViewModel : ChildTabbedPageViewModel
+	public class GestionMatierePageViewModel : ChildTabbedPageViewModel
 	{
-		public GestionAnneePageViewModel(
+		public GestionMatierePageViewModel(
 					INavigationService navigationService,
 					SchoolRepository db)
 			: base(navigationService, db)
 		{
 			//IsActiveChanged += HandleIsActiveTrue;
 			//IsActiveChanged += HandleIsActiveFalse;
-
 		}
 
 		// Use if there's some code to be executed when the tab is not 
@@ -23,7 +22,7 @@ namespace SchoolXam.ViewModels
 		//    if (IsActive == true) return;
 		//}
 
-		// Use if there's some code to be executed when the tab is the active tab
+		//// Use if there's some code to be executed when the tab is the active tab
 		//private void HandleIsActiveTrue(object sender, EventArgs e)
 		//{
 		//	if (IsActive == false) return;

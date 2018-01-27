@@ -17,7 +17,7 @@
             Text="{Binding PrenomEleve}"/>
         <Button 
             Text="Ajouter Élève"
-            Command="{Binding ClasseAttribEleveCommand}"/>
+            Command="{Binding AddEleveToClasseCommand}"/>
         <Label 
             Text="{Binding LabelLstEleve}"
             XAlign="Center"

@@ -10,8 +10,8 @@
         <Label 
             Text="Sélectionnez une Classe :"/>
         <Picker
-            x:Name="pickerClasse"            
-            ItemsSource="{Binding ListClasseAttribMatiere}"
+            x:Name="pickerClasse"    
+            ItemsSource="{Binding ListPickClasseMatiere}"
             ItemDisplayBinding="{Binding classeLib}"
             SelectedItem="{Binding SelectClassePicker}"/>
         <StackLayout

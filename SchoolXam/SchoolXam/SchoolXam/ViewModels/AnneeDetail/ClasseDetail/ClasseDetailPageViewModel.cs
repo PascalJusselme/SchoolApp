@@ -1,4 +1,5 @@
 ﻿using Prism.Navigation;
+using Prism.Services;
 using SchoolXam.Data;
 using SchoolXam.Models;
 
@@ -7,9 +8,10 @@ namespace SchoolXam.ViewModels
 	public class ClasseDetailPageViewModel : ChildTabbedPageViewModel
 	{
 		public ClasseDetailPageViewModel(
-					INavigationService navigationService,
-					SchoolRepository db)
-					: base(navigationService, db)
+						INavigationService navigationService,
+						IPageDialogService pageDialogService,
+						SchoolRepository db)
+						: base(navigationService, pageDialogService, db)
 		{
 
 		}

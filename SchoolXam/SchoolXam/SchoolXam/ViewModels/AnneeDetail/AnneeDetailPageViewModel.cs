@@ -1,5 +1,6 @@
 ﻿using Prism.Commands;
 using Prism.Navigation;
+using Prism.Services;
 using SchoolXam.Data;
 using SchoolXam.Models;
 using System;
@@ -11,6 +12,7 @@ namespace SchoolXam.ViewModels
 	public class AnneeDetailPageViewModel : BaseViewModel, INavigationAware
 	{
 		private readonly INavigationService _navigationService;
+		private readonly IPageDialogService _pageDialogService;
 
 		#region Annee Propertie and Command
 		private AnneeScolaire _annee;
@@ -55,7 +57,7 @@ namespace SchoolXam.ViewModels
 		#region Classe Commands
 		public DelegateCommand<string> AddClasseCommand => new DelegateCommand<string>(AddClasse);
 		public DelegateCommand<Classe> SelectClasse => new DelegateCommand<Classe>(ClasseSelected);
-		public DelegateCommand AttribMatiereToClasseCommand => new DelegateCommand(AttribClasseMatiere);
+		public DelegateCommand AttribMatiereToClasseCommand => new DelegateCommand(AttribMatiereToClasse);
 		#endregion
 
 		#endregion
@@ -116,42 +118,15 @@ namespace SchoolXam.ViewModels
 			}
 		}
 
-<<<<<<< HEAD
-		private Classe _selectClassePicker;
-		public Classe SelectClassePicker
-		{
-			get { return _selectClassePicker; }
-			set
-			{
-				SetProperty(ref _selectClassePicker, value);
-
-				if (_selectClassePicker != null)
-				{
-					BlocDevoirVisible = true;
-					ListDevoirs = GetListDevoirs_ClasseMatiere(LoadClasse(_selectClassePicker), Matiere);
-				}
-				else
-				{
-					BlocDevoirVisible = false;
-				}
-			}
-		}
-
 		#region Matiere Commands
 		public DelegateCommand<string> AddMatiereCommand => new DelegateCommand<string>(AddMatiere);
 		public DelegateCommand<Matiere> SelectMatiere => new DelegateCommand<Matiere>(MatiereSelected);
-		public DelegateCommand MatiereAttribClasseCommand => new DelegateCommand(AttribMatiereClasse);
-=======
-		#region Matiere Commands
-		public DelegateCommand<string> AddMatiereCommand { get; set; }
-		public DelegateCommand<Matiere> SelectMatiere { get; set; }
-		public DelegateCommand AttribClasseToMatiereCommand { get; set; }
->>>>>>> Refresh solution
+		public DelegateCommand AttribClasseToMatiereCommand => new DelegateCommand(AttribClasseToMatiere);
 		#endregion
 
 		#endregion
 
-		#region Eleve Properties
+		#region Eleve Properties and Commands
 		private ObservableCollection<Eleve> _listElevesbyClasse;
 		public ObservableCollection<Eleve> ListElevesbyClasse
 		{
@@ -179,17 +154,14 @@ namespace SchoolXam.ViewModels
 			get { return _labelLstEleve; }
 			set { SetProperty(ref _labelLstEleve, value); }
 		}
-<<<<<<< HEAD
-=======
 
 		#region Eleve Commands
-		public DelegateCommand AddEleveToClasseCommand { get; set; }
+		public DelegateCommand AddEleveToClasseCommand => new DelegateCommand(AddEleveToClasse);
 		#endregion
 
->>>>>>> Refresh solution
 		#endregion
 
-		#region Devoir Properties
+		#region Devoir Properties and Commands
 		private ObservableCollection<Devoir> _listDevoirs;
 		public ObservableCollection<Devoir> ListDevoirs
 		{
@@ -226,26 +198,34 @@ namespace SchoolXam.ViewModels
 		}
 
 		#region Devoir Commands
-<<<<<<< HEAD
 		public DelegateCommand AddDevoirCommand => new DelegateCommand(AddDevoirClasseMatiere);
 		#endregion
-=======
-		public DelegateCommand AddDevoirCommand { get; set; }
-		#endregion
 
->>>>>>> Refresh solution
 		#endregion
 
 		public AnneeDetailPageViewModel(
 			INavigationService navigationService,
+			IPageDialogService pageDialogService,
 			SchoolRepository db)
 			: base(db)
 		{
 			ListDevoirs = new ObservableCollection<Devoir>();
 
 			_navigationService = navigationService;
+
+			_pageDialogService = pageDialogService;
 		}
 
+		#region PageDialogService Propertie and Method
+		public DelegateCommand<string> DisplayAlertCommand => new DelegateCommand<string>(DisplayAlert);
+
+		private async void DisplayAlert(string message)
+		{
+			await _pageDialogService.DisplayAlertAsync("Alert", message, "Accept", "Cancel");
+		}
+		#endregion
+
+		#region NavigationService Methods
 		public override void OnNavigatedFrom(NavigationParameters parameters)
 		{
 
@@ -290,6 +270,7 @@ namespace SchoolXam.ViewModels
 		{
 
 		}
+		#endregion
 
 		#region AnneeScolaire
 		private AnneeScolaire LoadAnnee(AnneeScolaire annee)
@@ -337,17 +318,16 @@ namespace SchoolXam.ViewModels
 
 		private async void SaveAnnee()
 		{
-			//if (IsValidAnnee(Annee))
-			//{
+			if (String.IsNullOrEmpty(Annee.anneeLib) || String.IsNullOrWhiteSpace(Annee.anneeLib))
+			{
+				DisplayAlert($"Le Libellé de l'Année Scolaire ne peut pas être vide.");
+			}
+			else
+			{
 				_rep.SaveAnnee(Annee);
-			//}
 
-			await _navigationService.GoBackToRootAsync();
-		}
-
-		private bool IsValidAnnee(AnneeScolaire annee)
-		{
-			return (!String.IsNullOrEmpty(annee.anneeLib));
+				await _navigationService.GoBackToRootAsync();
+			}
 		}
 		#endregion
 
@@ -385,20 +365,22 @@ namespace SchoolXam.ViewModels
 				Devoirs = new List<Devoir>()
 			};
 
-			if (IsValidClasse(classe))
+			if (String.IsNullOrEmpty(classe.classeLib) || String.IsNullOrWhiteSpace(classe.classeLib))
 			{
-				// Ajout de la Classe a la liste des Classes de l'Annee
+				DisplayAlert($"Le Libellé de la Classe ne peut pas être vide.");
+			}
+			else if (classe.Annee.Classes.Exists(cl => cl.classeLib == classe.classeLib))
+			{
+				DisplayAlert($"Le Libellé de la Classe existe déjà pour cette Année Scolaire.");
+			}
+			else
+			{
+				//Ajout de la Classe a la liste des Classes de l'Annee
 				Annee.Classes.Add(classe);
 				ListClasses.Add(classe);
+				//Reset ClasseLib Entry
+				ClasseLib = string.Empty;
 			}
-		}
-
-		private bool IsValidClasse(Classe classe)
-		{
-			return (!String.IsNullOrEmpty(classe.classeLib)
-						&& !classe.Annee
-								  .Classes
-								  .Exists(cl => cl.classeLib == classe.classeLib));
 		}
 
 		private void AttribMatiereToClasse()
@@ -489,20 +471,22 @@ namespace SchoolXam.ViewModels
 				Devoirs = new List<Devoir>()
 			};
 
-			if (IsValidMatiere(matiere))
+			if (String.IsNullOrEmpty(matiere.matiereLib) || String.IsNullOrWhiteSpace(matiere.matiereLib))
 			{
-				// Ajout de la Matiere a la liste des Matieres de l'Annee
+				DisplayAlert($"Le Libellé de la Matière ne peut pas être vide.");
+			}
+			else if (matiere.Annee.Matieres.Exists(ma => ma.matiereLib == matiere.matiereLib))
+			{
+				DisplayAlert($"Le Libellé de la Matière existe déjà pour cette Année Scolaire.");
+			}
+			else
+			{
+				//Ajout de la Matiere a la liste des Matieres de l'Annee
 				Annee.Matieres.Add(matiere);
 				ListMatieres.Add(matiere);
+				//Reset MatiereLib Entry
+				MatiereLib = string.Empty;
 			}
-		}
-
-		private bool IsValidMatiere(Matiere matiere)
-		{
-			return (!String.IsNullOrEmpty(matiere.matiereLib)
-						&& !matiere.Annee
-								   .Matieres
-								   .Exists(ma => ma.matiereLib == matiere.matiereLib));
 		}
 
 		private void AttribClasseToMatiere()
@@ -572,37 +556,38 @@ namespace SchoolXam.ViewModels
 				Classe = Classe
 			};
 
-			if (IsValidEleve(eleve))
+			if (String.IsNullOrEmpty(eleve.nomEleve) || String.IsNullOrWhiteSpace(eleve.prenomEleve))
 			{
+				DisplayAlert($"Le Nom ou le Prénom de l'Élève ne peuvent pas être vide.");
+			}
+			else if (eleve.Classe.Eleves.Exists(el => el.nomEleve == eleve.nomEleve
+													&& el.prenomEleve == eleve.prenomEleve))
+			{
+				DisplayAlert($"L'Élève existe déjà pour cette Classe.");
+			}
+			else
+			{
+				//Ajout de l'Élève à la liste des Élèves de la Classe
 				Classe.Eleves.Add(eleve);
 				ListElevesbyClasse.Add(eleve);
+				//Reset Eleve Entries
+				NomEleve = string.Empty;
+				PrenomEleve = string.Empty;
 			}
 
 			AffichageListeEleve(Classe);
-		}
-
-		private bool IsValidEleve(Eleve eleve)
-		{
-			return (!String.IsNullOrEmpty(eleve.nomEleve)
-					&& !String.IsNullOrEmpty(eleve.prenomEleve)
-						&& !eleve.Classe
-								 .Eleves
-								 .Exists(el => el.nomEleve == eleve.nomEleve
-										    && el.prenomEleve == eleve.prenomEleve)
-											&& el.prenomEleve == eleve.prenomEleve)
-					);
 		}
 
 		private void AffichageListeEleve(Classe classe)
 		{
 			if (classe.Eleves.Count != 0)
 			{
-				LabelLstEleve = $"Liste des Élèves de la Classe : {classe.classeLib}"; 
-				}
+				LabelLstEleve = $"Liste des Élèves de la Classe : {classe.classeLib}";
+			}
 			else
 			{
-				LabelLstEleve = $"Il n'y a aucun Élève dans la Classe : {classe.classeLib}"; 
-				}
+				LabelLstEleve = $"Il n'y a aucun Élève dans la Classe : {classe.classeLib}";
+			}
 		}
 		#endregion
 
@@ -618,10 +603,29 @@ namespace SchoolXam.ViewModels
 				Matiere = Matiere
 			};
 
-			devoir.Classe.Devoirs.Add(devoir);
-			Matiere.Devoirs.Add(devoir);
-
-			ListDevoirs.Add(devoir);
+			if (String.IsNullOrEmpty(devoir.devoirLib) || String.IsNullOrWhiteSpace(devoir.devoirLib))
+			{
+				DisplayAlert($"Le Libellé du Devoir ne peut pas être vide.");
+			}
+			else if (devoir.Classe.Devoirs.Exists(de => de.devoirLib == devoir.devoirLib))
+			{
+				DisplayAlert($"Le Libellé du Devoir existe déjà pour la Classe.");
+			}
+			else if (devoir.Matiere.Devoirs.Exists(dev => dev.devoirLib == devoir.devoirLib))
+			{
+				DisplayAlert($"Le Libellé du Devoir existe déjà pour la Matière.");
+			}
+			else
+			{
+				//Ajout du Devoir aux Listes de Devoir de la Classe et de la Matière sélectionnées
+				devoir.Classe.Devoirs.Add(devoir);
+				Matiere.Devoirs.Add(devoir);
+				ListDevoirs.Add(devoir);
+				//Reset Devoir Entries
+				DevoirLib = string.Empty;
+				DevoirCoeff = 0;
+				DevoirNoteMax = 0;
+			}
 
 			AffichageListeDevoir();
 		}

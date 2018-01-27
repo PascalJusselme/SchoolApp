@@ -1,4 +1,5 @@
 ﻿using Prism.Navigation;
+using Prism.Services;
 using SchoolXam.Data;
 using SchoolXam.Models;
 using System;
@@ -9,9 +10,10 @@ namespace SchoolXam.ViewModels
 	public class MatiereAttribDevoirPageViewModel : ChildTabbedPageViewModel
 	{
         public MatiereAttribDevoirPageViewModel(
-					INavigationService navigationService,
-					SchoolRepository db)
-			: base(navigationService, db)
+						INavigationService navigationService,
+						IPageDialogService pageDialogService,
+						SchoolRepository db)
+						: base(navigationService, pageDialogService, db)
 		{
 			IsActiveChanged += HandleIsActiveTrue;
 			//IsActiveChanged += HandleIsActiveFalse;

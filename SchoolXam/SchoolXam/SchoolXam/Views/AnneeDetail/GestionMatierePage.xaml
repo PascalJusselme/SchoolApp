@@ -6,14 +6,16 @@
              x:Class="SchoolXam.Views.GestionMatierePage"
              Title="Gestion des Matieres de l'Année">
     <StackLayout
-             Margin="10,10,10,10">
+        Margin="10,10,10,10">
+        <Label 
+            Text="Libellé de la Matière à ajouter"/>
         <Entry 
             x:Name="txtMatiereLib"
-            Placeholder="Libellé Matière"
+            Placeholder="Libellé Matière à ajouter"
             Text="{Binding MatiereLib}"/>
         <Button
             x:Name="btnAddMatiere"
-            Text="Add Matiere"
+            Text="Ajouter Matière"
             Command="{Binding AddMatiereCommand}"
             CommandParameter="{Binding MatiereLib}"/>
         <ListView 
@@ -28,9 +30,9 @@
                                 <ColumnDefinition Width="50"/>
                                 <ColumnDefinition Width="auto"/>
                             </Grid.ColumnDefinitions>
-                            <Label 
+                            <!--<Label 
                                 Text="{Binding matiereID}"
-                                Font="15,Bold" />
+                                Font="15,Bold" />-->
                             <Label 
                                 Text="{Binding matiereLib}" 
                                 Font="15,Bold" 

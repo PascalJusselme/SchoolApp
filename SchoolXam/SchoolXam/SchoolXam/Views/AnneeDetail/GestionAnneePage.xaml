@@ -6,7 +6,9 @@
              x:Class="SchoolXam.Views.GestionAnneePage"
              Title="Gestion Annee Scolaire">
     <StackLayout
-             Margin="10,10,10,10">
+        Margin="10,10,10,10">
+        <Label 
+            Text="Libellé de l'Année Scolaire à ajouter"/>
         <Entry
             x:Name="AnneeLib"
             Text="{Binding Annee.anneeLib, Mode=TwoWay}"

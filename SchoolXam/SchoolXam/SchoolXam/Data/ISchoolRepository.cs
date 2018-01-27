@@ -29,7 +29,7 @@ namespace SchoolXam.Data
 		#endregion
 
 		#region Devoir
-		List<Devoir> GetDevoirByMatiere(Matiere matiere);
+
 		#endregion
 	}
 }

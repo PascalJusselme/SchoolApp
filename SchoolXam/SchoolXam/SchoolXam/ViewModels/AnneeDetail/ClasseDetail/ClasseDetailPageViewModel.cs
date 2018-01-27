@@ -29,8 +29,6 @@ namespace SchoolXam.ViewModels
 			if (parameters != null && parameters.ContainsKey("Classe"))
 			{
 				Classe = parameters["Classe"] as Classe;
-
-				SubTitle = $"Classe : {Classe.classeLib}";
 			}
 		}
 

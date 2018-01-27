@@ -15,13 +15,6 @@ namespace SchoolXam.ViewModels
 			set { SetProperty(ref _title, value); }
 		}
 
-		private string _subtitle;
-		public string SubTitle
-		{
-			get { return _subtitle; }
-			set { SetProperty(ref _subtitle, value); }
-		}
-
 		public BaseViewModel(
 			SchoolRepository db)
 		{

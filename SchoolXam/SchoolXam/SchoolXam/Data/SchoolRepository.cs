@@ -79,6 +79,14 @@ namespace SchoolXam.Data
 					}
 				}
 
+				foreach (Devoir	devoir in classe.Devoirs)
+				{
+					if (devoir.devoirID == 0)
+					{
+						_conn.Insert(devoir);
+					}
+				}
+
 				_conn.UpdateWithChildren(classe);
 			}
 
@@ -148,10 +156,7 @@ namespace SchoolXam.Data
 		#endregion
 
 		#region Devoir
-		public List<Devoir> GetDevoirByMatiere(Matiere matiere)
-		{
-			throw new NotImplementedException();
-		}
+
 		#endregion
 	}
 }

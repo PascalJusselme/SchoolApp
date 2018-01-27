@@ -5,7 +5,7 @@
             prism:ViewModelLocator.AutowireViewModel="True"
             xmlns:local="clr-namespace:SchoolXam.Views;assembly=SchoolXam"
             x:Class="SchoolXam.Views.MatiereDetailPage"
-            Title="{Binding SubTitle}">
+            Title="{Binding Matiere.matiereLib}">
     <TabbedPage.Children>
         <local:MatiereAttribClassePage/>
         <local:MatiereAttribDevoirPage/>

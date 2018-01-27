@@ -9,50 +9,47 @@
              Margin="10,10,10,10">
         <Entry 
             x:Name="txtNomEleve"
-            Placeholder="Nom de l'Élève"
+            Placeholder="Nom de l'Élève à ajouter"
             Text="{Binding NomEleve}"/>
         <Entry 
             x:Name="txtPrenomEleve"
-            Placeholder="Prénom de l'Élève"
+            Placeholder="Prénom de l'Élève à ajouter"
             Text="{Binding PrenomEleve}"/>
         <Button 
-            Text="Ajouter Élèves à la Classe"
+            Text="Ajouter Élève"
             Command="{Binding ClasseAttribEleveCommand}"/>
         <Label 
-            Text="{Binding LabetLstEleve}"
+            Text="{Binding LabelLstEleve}"
             XAlign="Center"
             FontAttributes="Italic"/>
-        <StackLayout
-            x:Name="lstElevesBloc">
-            <ListView 
+        <ListView 
                 x:Name="lstEleves"
-                ItemsSource="{Binding Classe.Eleves}"
+                ItemsSource="{Binding ListElevesbyClasse}"
                 HasUnevenRows="False">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="50"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <Label 
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <!--<Label 
                                 Text="{Binding eleveID}"
-                                Font="15,Bold" />
-                                <Label 
+                                Font="15,Bold" />-->
+                            <Label 
                                 Text="{Binding nomEleve}" 
                                 Font="15,Bold" 
                                 Grid.Column="1"/>
-                                <Label 
+                            <Label 
                                 Text="{Binding prenomEleve}" 
                                 Font="15,Bold" 
                                 Grid.Column="2"/>
-                            </Grid>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </StackLayout>
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </StackLayout>
 </ContentPage>

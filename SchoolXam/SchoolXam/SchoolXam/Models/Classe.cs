@@ -27,7 +27,7 @@ namespace SchoolXam.Models
 		public List<Matiere> Matieres { get; set; }
 
 		[OneToMany(CascadeOperations = CascadeOperation.All)]
-		public ObservableCollection<Eleve> Eleves { get; set; }
+		public List<Eleve> Eleves { get; set; }
 
 		[OneToMany(CascadeOperations = CascadeOperation.All)]
 		public List<Devoir> Devoirs { get; set; }

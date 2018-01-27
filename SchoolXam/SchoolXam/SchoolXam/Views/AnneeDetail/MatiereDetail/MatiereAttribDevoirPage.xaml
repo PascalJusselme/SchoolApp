@@ -10,7 +10,76 @@
         <Label 
             Text="Sélectionnez une Classe :"/>
         <Picker
+            x:Name="pickerClasse"            
             ItemsSource="{Binding ListClasseAttribMatiere}"
-            ItemDisplayBinding="{Binding classeLib}" />
+            ItemDisplayBinding="{Binding classeLib}"
+            SelectedItem="{Binding SelectClassePicker}"/>
+        <StackLayout
+            IsVisible="{Binding BlocDevoirVisible}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Entry 
+                    x:Name="txtDevoirLib"
+                    Placeholder="Libellé du Devoir"
+                    Text="{Binding DevoirLib}"
+                    Grid.Row="0"
+                    Grid.ColumnSpan="2">
+                </Entry>
+                <Entry 
+                    x:Name="txtDevoirNoteMax"
+                    Placeholder="Note Max du Devoir"
+                    Text="{Binding DevoirNoteMax}"
+                    Grid.Row="1"
+                    Grid.Column="0">
+                </Entry>
+                <Entry 
+                    x:Name="txtDevoirCoeff"
+                    Placeholder="Coeff du Devoir"
+                    Text="{Binding DevoirCoeff}"
+                    Grid.Row="1"
+                    Grid.Column="1">
+                </Entry>
+            </Grid>
+            <Button
+                x:Name="btnAddDevoir"
+                Text="Ajouter Devoir"
+                Command="{Binding AddDevoirCommand}"/>
+            <Label 
+                Text="Liste des Devoirs de la Matière et de la Classe"/>
+            <ListView
+                ItemsSource="{Binding ListDevoirs}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="50"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Label 
+                                Text="{Binding devoirLib}" 
+                                Font="15,Bold" 
+                                Grid.Column="1" />
+                                <Label 
+                                Text="{Binding devoirNoteMax}" 
+                                Font="15,Bold" 
+                                Grid.Column="1" />
+                                <Label 
+                                Text="{Binding devoirCoeff}" 
+                                Font="15,Bold" 
+                                Grid.Column="1" />
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
     </StackLayout>
 </ContentPage>

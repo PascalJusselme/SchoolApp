@@ -8,7 +8,7 @@
     <StackLayout
              Margin="10,10,10,10">
         <Button 
-            Text="Attribuer Matière à la Classe"
+            Text="Attribuer Matière(s)"
             Command="{Binding ClasseAttribMatiereCommand}"/>
         <ListView 
             x:Name="lstMatieres"
@@ -23,9 +23,9 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="auto"/>
                             </Grid.ColumnDefinitions>
-                            <Label 
+                            <!--<Label 
                             Text="{Binding Data.matiereID}"
-                            Font="15,Bold" />
+                            Font="15,Bold" />-->
                             <Label 
                             Text="{Binding Data.matiereLib}" 
                             Font="15,Bold" 

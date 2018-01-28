@@ -26,6 +26,8 @@ namespace SchoolXam.Data
 		#region Eleve
 		List<Eleve> GetEleveByClasse(Classe classe);
 		void SaveEleve(Eleve eleve);
+		void SaveClasse(Classe classe);
+		void SaveMatiere(Matiere matiere);
 		#endregion
 
 		#region Devoir

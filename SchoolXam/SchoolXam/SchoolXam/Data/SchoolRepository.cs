@@ -123,6 +123,14 @@ namespace SchoolXam.Data
 		{
 			_conn.UpdateWithChildren(classe);
 		}
+
+		public void SaveClasse(Classe classe)
+		{
+			if (classe.classeID == 0)
+			{
+				_conn.Insert(classe);
+			}
+		}
 		#endregion
 
 		#region Matiere
@@ -139,6 +147,14 @@ namespace SchoolXam.Data
 		public void UpdateMatiere(Matiere matiere)
 		{
 			_conn.UpdateWithChildren(matiere);
+		}
+
+		public void SaveMatiere(Matiere matiere)
+		{
+				if (matiere.matiereID == 0)
+				{
+					_conn.Insert(matiere);
+				}
 		}
 		#endregion
 

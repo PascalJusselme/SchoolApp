@@ -342,8 +342,10 @@ namespace SchoolXam.ViewModels
 		private Classe GetClasse(Classe classe)
 		{
 			Annee = classe.Annee;
-
-			classe = Annee.Classes.Find(cl => cl.classeLib == classe.classeLib);
+			if (classe.classeID != 0)
+			{
+				classe = _rep.GetClasse(classe);
+			}
 
 			LoadLstMatiereAttribuable(classe);
 
@@ -378,6 +380,7 @@ namespace SchoolXam.ViewModels
 				//Ajout de la Classe a la liste des Classes de l'Annee
 				Annee.Classes.Add(classe);
 				ListClasses.Add(classe);
+				_rep.SaveClasse(classe);
 				//Reset ClasseLib Entry
 				ClasseLib = string.Empty;
 			}
@@ -462,7 +465,10 @@ namespace SchoolXam.ViewModels
 		{
 			Annee = matiere.Annee;
 
-			matiere = Annee.Matieres.Find(ma => ma.matiereLib == matiere.matiereLib);
+			if (matiere.matiereID != 0)
+			{
+				matiere = _rep.GetMatiere(matiere);
+			}
 
 			LoadLstClasseAttribuable(matiere);
 
@@ -494,6 +500,7 @@ namespace SchoolXam.ViewModels
 				//Ajout de la Matiere a la liste des Matieres de l'Annee
 				Annee.Matieres.Add(matiere);
 				ListMatieres.Add(matiere);
+				_rep.SaveMatiere(matiere);
 				//Reset MatiereLib Entry
 				MatiereLib = string.Empty;
 			}

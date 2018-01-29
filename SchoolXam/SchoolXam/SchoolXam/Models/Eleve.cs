@@ -1,7 +1,6 @@
 ﻿using Prism.Mvvm;
 using SQLite;
 using SQLiteNetExtensions.Attributes;
-using System.Collections.Generic;
 
 namespace SchoolXam.Models
 {
@@ -16,6 +15,7 @@ namespace SchoolXam.Models
 			get { return _nomEleve; }
 			set { SetProperty(ref _nomEleve, value); }
 		}
+
 		private string _prenomEleve;
 		public string prenomEleve
 		{

@@ -7,6 +7,7 @@ using SchoolXam.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace SchoolXam.ViewModels
 {
@@ -138,7 +139,8 @@ namespace SchoolXam.ViewModels
 
 		private void RaiseIsActiveChanged()
 		{
-			ListPickClasseMatiere = new ObservableCollection<Classe>(Matiere.Classes);
+			ListDevoirs = new ObservableCollection<Devoir>();
+			ListPickClasseMatiere = new ObservableCollection<Classe>(Matiere.Classes);			
 			LoadLstClasseAttribuable(Matiere);
 		}
 
@@ -174,7 +176,7 @@ namespace SchoolXam.ViewModels
 
 				Annee = Matiere.Annee;
 
-				ListPickClasseMatiere = new ObservableCollection<Classe>(Matiere.Classes);
+				//ListPickClasseMatiere = new ObservableCollection<Classe>();
 
 				Title = Matiere.matiereLib;
 			}
@@ -288,6 +290,8 @@ namespace SchoolXam.ViewModels
 
 		private ObservableCollection<Devoir> GetListDevoirs_ClasseMatiere(Classe classe, Matiere matiere)
 		{
+			classe = Annee.Classes.Find(c => c.classeLib == classe.classeLib);
+
 			List<Devoir> lstDevoir = new List<Devoir>();
 
 			foreach (Devoir devoir in matiere.Devoirs)

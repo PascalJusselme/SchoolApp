@@ -2,7 +2,6 @@
 using SQLite;
 using SQLiteNetExtensions.Attributes;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 namespace SchoolXam.Models
 {
@@ -15,10 +14,7 @@ namespace SchoolXam.Models
 		public string anneeLib
 		{
 			get { return _anneeLib; }
-			set
-			{
-				SetProperty(ref _anneeLib, value);
-			}
+			set { SetProperty(ref _anneeLib, value); }
 		}
 
 		[OneToMany(CascadeOperations = CascadeOperation.All)]

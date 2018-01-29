@@ -10,6 +10,28 @@
         <Button 
             Text="Attribuer Classe(s)"
             Command="{Binding AttribClasseToMatiereCommand}"/>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="25"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <Label 
+                Text="Liste des Classes Attribuable"
+                XAlign="Center"
+                FontAttributes="Italic"
+                Grid.ColumnSpan="3"
+                Grid.Row="0" />
+            <Label 
+                Text="Libellé des Classes"  
+                Grid.Column="1"
+                Grid.Row="1" />
+        </Grid>
         <ListView 
             x:Name="lstClasses"
             ItemsSource="{Binding ClasseAttribuable}" 

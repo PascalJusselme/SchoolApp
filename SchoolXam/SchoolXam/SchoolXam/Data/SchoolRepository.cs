@@ -28,9 +28,6 @@ namespace SchoolXam.Data
 
 		#region Eleve
 		List<Eleve> GetEleveByClasse(Classe classe);
-		void SaveEleve(Eleve eleve);
-		void SaveClasse(Classe classe);
-		void SaveMatiere(Matiere matiere);
 		#endregion
 
 		#region Devoir
@@ -83,11 +80,11 @@ namespace SchoolXam.Data
 		{
 			if (annee.anneeID == 0)
 			{
-				_conn.InsertWithChildren(annee);
+				_conn.Insert(annee);
 			}
 			else
 			{
-				_conn.UpdateWithChildren(annee);
+				_conn.Update(annee);
 			}
 
 			foreach (Classe classe in annee.Classes)
@@ -97,25 +94,15 @@ namespace SchoolXam.Data
 					_conn.Insert(classe);
 				}
 
-				//foreach (Eleve eleve in classe.Eleves)
-				//{
-				//	if (eleve.eleveID == 0)
-				//	{
-				//		_conn.Insert(eleve);
-				//	}
+				foreach (Eleve eleve in classe.Eleves)
+				{
+					if (eleve.eleveID == 0)
+					{
+						_conn.Insert(eleve);
+					}
 
-				//	_conn.UpdateWithChildren(eleve);
-				//}
-
-				//foreach (Devoir devoir in classe.Devoirs)
-				//{
-				//	if (devoir.devoirID == 0)
-				//	{
-				//		_conn.Insert(devoir);
-				//	}
-
-				//	_conn.UpdateWithChildren(devoir);
-				//}
+					_conn.UpdateWithChildren(eleve);
+				}
 
 				foreach (Devoir devoir in classe.Devoirs)
 				{
@@ -123,6 +110,8 @@ namespace SchoolXam.Data
 					{
 						_conn.Insert(devoir);
 					}
+
+					_conn.UpdateWithChildren(devoir);
 				}
 
 				_conn.UpdateWithChildren(classe);
@@ -137,6 +126,7 @@ namespace SchoolXam.Data
 
 				_conn.UpdateWithChildren(matiere);
 			}
+
 		}
 		#endregion
 
@@ -155,14 +145,6 @@ namespace SchoolXam.Data
 		{
 			_conn.UpdateWithChildren(classe);
 		}
-
-		public void SaveClasse(Classe classe)
-		{
-			if (classe.classeID == 0)
-			{
-				_conn.Insert(classe);
-			}
-		}
 		#endregion
 
 		#region Matiere
@@ -180,32 +162,12 @@ namespace SchoolXam.Data
 		{
 			_conn.UpdateWithChildren(matiere);
 		}
-
-		public void SaveMatiere(Matiere matiere)
-		{
-			if (matiere.matiereID == 0)
-			{
-				_conn.Insert(matiere);
-			}
-		}
 		#endregion
 
 		#region Eleve
 		public List<Eleve> GetEleveByClasse(Classe classe)
 		{
 			return _conn.Table<Eleve>().Where(el => el.classeID == classe.classeID).ToList();
-		}
-
-		public void SaveEleve(Eleve eleve)
-		{
-			if (eleve.eleveID == 0)
-			{
-				_conn.InsertWithChildren(eleve);
-			}
-			else
-			{
-				_conn.UpdateWithChildren(eleve);
-			}
 		}
 		#endregion
 

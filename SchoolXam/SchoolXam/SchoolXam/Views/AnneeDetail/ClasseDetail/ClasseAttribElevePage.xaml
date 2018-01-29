@@ -7,46 +7,89 @@
              Title="Attribution des Élèves à la classe">
     <StackLayout
              Margin="10,10,10,10">
-        <Entry 
-            x:Name="txtNomEleve"
-            Placeholder="Nom de l'Élève à ajouter"
-            Text="{Binding NomEleve}"/>
-        <Entry 
-            x:Name="txtPrenomEleve"
-            Placeholder="Prénom de l'Élève à ajouter"
-            Text="{Binding PrenomEleve}"/>
-        <Button 
-            Text="Ajouter Élève"
-            Command="{Binding AddEleveToClasseCommand}"/>
-        <Label 
-            Text="{Binding LabelLstEleve}"
-            XAlign="Center"
-            FontAttributes="Italic"/>
-        <ListView 
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+            <Entry 
+                x:Name="txtNomEleve"
+                Placeholder="Nom de l'Élève"
+                Text="{Binding NomEleve}"
+                Grid.Column="0"
+                Grid.Row="0" />
+            <Entry 
+                x:Name="txtPrenomEleve"
+                Placeholder="Prénom de l'Élève"
+                Text="{Binding PrenomEleve}"
+                Grid.Column="1"
+                Grid.Row="0" />
+            <Button 
+                Text="Ajouter Élève"
+                Command="{Binding AddEleveToClasseCommand}"
+                Grid.ColumnSpan="2"
+                Grid.Row="1"/>
+        </Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+            <Label 
+                Text="{Binding LabelLstEleve}"
+                XAlign="Center"
+                FontAttributes="Italic"
+                Grid.ColumnSpan="2"
+                Grid.Row="0" />
+            <Label 
+                Text="Nom des Élèves"
+                XAlign="Center"
+                Grid.Column="0"
+                Grid.Row="1" />
+            <Label 
+                Text="Prénom des Élèves"
+                XAlign="Center"
+                Grid.Column="1"
+                Grid.Row="1" />
+            <ListView 
                 x:Name="lstEleves"
                 ItemsSource="{Binding ListElevesbyClasse}"
-                HasUnevenRows="False">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="50"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Label 
-                                Text="{Binding nomEleve}" 
-                                Font="15,Bold" 
-                                Grid.Column="1"/>
-                            <Label 
-                                Text="{Binding prenomEleve}" 
-                                Font="15,Bold" 
-                                Grid.Column="2"/>
-                        </Grid>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+                HasUnevenRows="True"
+                HorizontalOptions="Center"
+                Grid.ColumnSpan="2"
+                Grid.Row="2" >
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label 
+                                    Text="{Binding nomEleve}" 
+                                    Font="15,Bold" 
+                                    Grid.Column="0"
+                                    XAlign="Center"/>
+                                <Label 
+                                    Text="{Binding prenomEleve}" 
+                                    Font="15,Bold" 
+                                    Grid.Column="1"
+                                    XAlign="Center" />
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
     </StackLayout>
 </ContentPage>

@@ -52,7 +52,30 @@
                 Text="Ajouter Devoir"
                 Command="{Binding AddDevoirCommand}"/>
             <Label 
-                Text="Liste des Devoirs de la Matière et de la Classe"/>
+                Text="Liste des Devoirs"
+                XAlign="Center"
+                FontAttributes="Italic"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="75"/>
+                    <ColumnDefinition Width="75"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Label 
+                    Text="Libellé"
+                    Grid.Column="0"/>
+                <Label 
+                    Text="Note Max"
+                    Grid.Column="1"
+                    XAlign="End"/>
+                <Label 
+                    Text="Coefficient"
+                    Grid.Column="2"
+                    XAlign="End" />
+            </Grid>
             <ListView
                 ItemsSource="{Binding ListDevoirs}">
                 <ListView.ItemTemplate>
@@ -60,21 +83,24 @@
                         <ViewCell>
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="50"/>
-                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="75"/>
+                                    <ColumnDefinition Width="75"/>
                                 </Grid.ColumnDefinitions>
                                 <Label 
-                                Text="{Binding devoirLib}" 
-                                Font="15,Bold" 
-                                Grid.Column="1" />
+                                    Text="{Binding devoirLib}" 
+                                    Font="15,Bold" 
+                                    Grid.Column="0"/>
                                 <Label 
-                                Text="{Binding devoirNoteMax}" 
-                                Font="15,Bold" 
-                                Grid.Column="1" />
+                                    Text="{Binding devoirNoteMax}" 
+                                    Font="15,Bold" 
+                                    Grid.Column="1"
+                                    XAlign="End" />
                                 <Label 
-                                Text="{Binding devoirCoeff}" 
-                                Font="15,Bold" 
-                                Grid.Column="1" />
+                                    Text="{Binding devoirCoeff}" 
+                                    Font="15,Bold" 
+                                    Grid.Column="2"
+                                    XAlign="End" />
                             </Grid>
                         </ViewCell>
                     </DataTemplate>

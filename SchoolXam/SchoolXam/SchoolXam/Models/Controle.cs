@@ -1,7 +1,6 @@
 ﻿using Prism.Mvvm;
 using SQLite;
 using SQLiteNetExtensions.Attributes;
-using System.Collections.Generic;
 
 namespace SchoolXam.Models
 {

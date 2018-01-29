@@ -63,7 +63,7 @@ namespace SchoolXam.ViewModels
 
 		public override void Destroy()
 		{
-			
+
 		}
 		#endregion
 

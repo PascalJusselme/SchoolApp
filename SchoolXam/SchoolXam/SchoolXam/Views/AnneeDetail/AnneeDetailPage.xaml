@@ -6,12 +6,15 @@
              xmlns:local="clr-namespace:SchoolXam.Views;assembly=SchoolXam"
              x:Class="SchoolXam.Views.AnneeDetailPage"
             Title="{Binding Annee.anneeLib}">
+    
     <TabbedPage.ToolbarItems>
         <ToolbarItem 
             Text="SaveAnnee" 
             Command="{Binding SaveAnneeCommand} "/>
     </TabbedPage.ToolbarItems>
+    
     <local:GestionAnneePage/>
     <local:GestionClassePage/>
     <local:GestionMatierePage/>
+    
 </TabbedPage>

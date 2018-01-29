@@ -6,6 +6,38 @@ using System.Collections.Generic;
 
 namespace SchoolXam.Data
 {
+	public interface ISchoolRepository
+	{
+		#region AnneeScolaire
+		AnneeScolaire GetAnnee(AnneeScolaire annee);
+		List<AnneeScolaire> GetAnnees();
+		void SaveAnnee(AnneeScolaire annee);
+		#endregion
+
+		#region Classe
+		List<Classe> GetClassesByAnnee(AnneeScolaire annee);
+		Classe GetClasse(Classe classe);
+		void UpdateClasse(Classe classe);
+		#endregion
+
+		#region Matiere
+		List<Matiere> GetMatieresByAnnee(AnneeScolaire annee);
+		Matiere GetMatiere(Matiere matiere);
+		void UpdateMatiere(Matiere matiere);
+		#endregion
+
+		#region Eleve
+		List<Eleve> GetEleveByClasse(Classe classe);
+		void SaveEleve(Eleve eleve);
+		void SaveClasse(Classe classe);
+		void SaveMatiere(Matiere matiere);
+		#endregion
+
+		#region Devoir
+
+		#endregion
+	}
+
 	public class SchoolRepository : ISchoolRepository
 	{
 		public SQLiteConnection _conn;
@@ -81,11 +113,11 @@ namespace SchoolXam.Data
 				//	{
 				//		_conn.Insert(devoir);
 				//	}
-					
+
 				//	_conn.UpdateWithChildren(devoir);
 				//}
 
-				foreach (Devoir	devoir in classe.Devoirs)
+				foreach (Devoir devoir in classe.Devoirs)
 				{
 					if (devoir.devoirID == 0)
 					{
@@ -151,10 +183,10 @@ namespace SchoolXam.Data
 
 		public void SaveMatiere(Matiere matiere)
 		{
-				if (matiere.matiereID == 0)
-				{
-					_conn.Insert(matiere);
-				}
+			if (matiere.matiereID == 0)
+			{
+				_conn.Insert(matiere);
+			}
 		}
 		#endregion
 

@@ -35,9 +35,6 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <!--<Label 
-                                Text="{Binding eleveID}"
-                                Font="15,Bold" />-->
                             <Label 
                                 Text="{Binding nomEleve}" 
                                 Font="15,Bold" 

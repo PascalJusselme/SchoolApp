@@ -35,15 +35,16 @@
         <ListView 
             x:Name="lstClasses"
             ItemsSource="{Binding ClasseAttribuable}" 
-            HasUnevenRows="True">
+            HasUnevenRows="True"
+            HorizontalOptions="Center">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="50"/>
+                                <ColumnDefinition Width="25"/>
                                 <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="50"/>
                             </Grid.ColumnDefinitions>
                             <Label 
                                 Text="{Binding Data.classeLib}" 

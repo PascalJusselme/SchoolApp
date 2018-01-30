@@ -2,9 +2,11 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             xmlns:behavior="clr-namespace:SchoolXam.Behaviors;assembly=SchoolXam"
              prism:ViewModelLocator.AutowireViewModel="True"             
              x:Class="SchoolXam.Views.GestionClassePage"
              Title="Gestion des Classes de l'Année">
+    
     <StackLayout
         Margin="10,10,10,10">
         <Label 
@@ -23,6 +25,12 @@
             x:Name="lstClasses"
             ItemsSource="{Binding ListClasses}"
             HasUnevenRows="True">
+            <ListView.Behaviors>
+                <behavior:EventToCommandBehavior 
+                    EventName="ItemTapped" 
+                    Command="{Binding SelectClasseCommand}" 
+                    Converter="{StaticResource ItemTappedConverter}" />
+            </ListView.Behaviors>
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
@@ -41,4 +49,5 @@
             </ListView.ItemTemplate>
         </ListView>        
     </StackLayout>
+    
 </ContentPage>

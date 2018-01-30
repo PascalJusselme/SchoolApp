@@ -9,7 +9,7 @@ using System.Collections.ObjectModel;
 
 namespace SchoolXam.ViewModels
 {
-	public class AnneeDetailPageViewModel : BaseViewModel, INavigationAware
+	public class AnneeDetailPageViewModel : BaseViewModel
 	{
 		private readonly INavigationService _navigationService;
 		private readonly IPageDialogService _pageDialogService;
@@ -42,7 +42,7 @@ namespace SchoolXam.ViewModels
 
 		#region Classe Commands
 		public DelegateCommand<string> AddClasseCommand => new DelegateCommand<string>(AddClasse);
-		public DelegateCommand<Classe> SelectClasse => new DelegateCommand<Classe>(ClasseSelected);
+		public DelegateCommand<Classe> SelectClasseCommand => new DelegateCommand<Classe>(ClasseSelected);
 		#endregion
 
 		#endregion
@@ -64,7 +64,7 @@ namespace SchoolXam.ViewModels
 
 		#region Matiere Commands
 		public DelegateCommand<string> AddMatiereCommand => new DelegateCommand<string>(AddMatiere);
-		public DelegateCommand<Matiere> SelectMatiere => new DelegateCommand<Matiere>(MatiereSelected);
+		public DelegateCommand<Matiere> SelectMatiereCommand => new DelegateCommand<Matiere>(MatiereSelected);
 		#endregion
 
 		#endregion

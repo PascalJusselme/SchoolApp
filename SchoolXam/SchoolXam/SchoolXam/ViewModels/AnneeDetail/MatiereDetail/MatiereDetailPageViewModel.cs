@@ -176,8 +176,6 @@ namespace SchoolXam.ViewModels
 
 				Annee = Matiere.Annee;
 
-				//ListPickClasseMatiere = new ObservableCollection<Classe>();
-
 				Title = Matiere.matiereLib;
 			}
 		}

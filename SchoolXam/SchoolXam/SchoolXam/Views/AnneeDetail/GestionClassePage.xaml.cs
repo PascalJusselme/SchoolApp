@@ -5,27 +5,11 @@ using Xamarin.Forms;
 
 namespace SchoolXam.Views
 {
-	public partial class GestionClassePage : ContentPage, INavigationAware
+	public partial class GestionClassePage : ContentPage, INavigatedAware
 	{
-		public AnneeDetailPageViewModel ViewModel => BindingContext as AnneeDetailPageViewModel;
-
 		public GestionClassePage()
 		{
 			InitializeComponent();
-
-			lstClasses.ItemSelected += (o, e) =>
-			{
-				if (e.SelectedItem is Classe)
-				{
-					var classe = e.SelectedItem as Classe;
-					ViewModel.SelectClasse.Execute(classe);
-				}
-			};
-		}
-
-		public void OnNavigatedTo(NavigationParameters parameters)
-		{
-
 		}
 
 		public void OnNavigatedFrom(NavigationParameters parameters)
@@ -33,7 +17,7 @@ namespace SchoolXam.Views
 			lstClasses.SelectedItem = null;
 		}
 
-		public void OnNavigatingTo(NavigationParameters parameters)
+		public void OnNavigatedTo(NavigationParameters parameters)
 		{
 
 		}

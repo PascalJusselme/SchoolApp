@@ -36,9 +36,7 @@
             x:Name="lstMatieres"
             ItemsSource="{Binding MatiereAttribuableToClasse}"         
             HasUnevenRows="True"
-            HorizontalOptions="Center" 
-            Grid.ColumnSpan="3"
-            Grid.Row="2">
+            HorizontalOptions="Center">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
@@ -53,7 +51,7 @@
                                 Font="15,Bold" 
                                 Grid.Column="1"/>
                             <Switch 
-                                IsToggled="{Binding Selected}" 
+                                IsToggled="{Binding Selected}"
                                 Grid.Column="2" />
                         </Grid>
                     </ViewCell>

@@ -83,8 +83,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Behaviors\" />
-    <Folder Include="Converters\" />
     <Folder Include="Effects\" />
     <Folder Include="Events\" />
     <Folder Include="Messages\" />

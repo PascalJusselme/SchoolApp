@@ -31,7 +31,7 @@ namespace SchoolXam.ViewModels
 		#endregion
 
 		#region Annees Commands
-		public DelegateCommand<AnneeScolaire> SelectAnnee => new DelegateCommand<AnneeScolaire>(AnneeSelected);
+		public DelegateCommand<AnneeScolaire> SelectAnneeCommand => new DelegateCommand<AnneeScolaire>(AnneeSelected);
 		public DelegateCommand AddAnneeCommand => new DelegateCommand(AddAnnee);
 		#endregion
 

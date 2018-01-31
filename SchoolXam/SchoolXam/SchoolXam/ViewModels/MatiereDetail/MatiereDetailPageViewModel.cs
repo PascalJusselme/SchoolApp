@@ -33,11 +33,11 @@ namespace SchoolXam.ViewModels
 			set { SetProperty(ref _matiere, value); }
 		}
 
-		private List<SelectableData<Classe>> _classeAttribuable;
-		public List<SelectableData<Classe>> ClasseAttribuable
+		private List<SelectableData<Classe>> _classeAttribuableToMatiere;
+		public List<SelectableData<Classe>> ClasseAttribuableToMatiere
 		{
-			get { return _classeAttribuable; }
-			set { SetProperty(ref _classeAttribuable, value); }
+			get { return _classeAttribuableToMatiere; }
+			set { SetProperty(ref _classeAttribuableToMatiere, value); }
 		}
 
 		private ObservableCollection<Classe> _listPickClasseMatiere;
@@ -46,7 +46,7 @@ namespace SchoolXam.ViewModels
 			get { return _listPickClasseMatiere; }
 			set { SetProperty(ref _listPickClasseMatiere, value); }
 		}
-		
+
 		private Classe _selectClassePicker;
 		public Classe SelectClassePicker
 		{
@@ -58,7 +58,7 @@ namespace SchoolXam.ViewModels
 				if (_selectClassePicker != null)
 				{
 					BlocDevoirVisible = true;
-					ListDevoirs = GetListDevoirs_ClasseMatiere(_selectClassePicker, Matiere);
+					ListDevoirs = GetListDevoirs_ClasseMatiere(LoadClassePicked(_selectClassePicker), Matiere);
 				}
 				else
 				{
@@ -140,8 +140,9 @@ namespace SchoolXam.ViewModels
 		private void RaiseIsActiveChanged()
 		{
 			ListDevoirs = new ObservableCollection<Devoir>();
-			ListPickClasseMatiere = new ObservableCollection<Classe>(Matiere.Classes);			
-			LoadLstClasseAttribuable(Matiere);
+			RefreshLstClasseAttribuable(Matiere);
+			ListPickClasseMatiere = new ObservableCollection<Classe>(
+							ClasseAttribuableToMatiere.Where(d => d.Selected == true).Select(d => d.Data));
 		}
 
 		#endregion
@@ -176,7 +177,7 @@ namespace SchoolXam.ViewModels
 
 				Annee = Matiere.Annee;
 
-				Title = Matiere.matiereLib;
+				LoadLstClasseAttribuable(Matiere);
 			}
 		}
 
@@ -189,9 +190,13 @@ namespace SchoolXam.ViewModels
 		#region Matiere Methods
 		private void AttribClasseToMatiere()
 		{
+			// Penser à supprimer les DEVOIRS correspondants 
+			// à la DÉSATTRIBUTION d'une CLASSE
+
+
 			Matiere.Classes.Clear();
 
-			foreach (var data in ClasseAttribuable)
+			foreach (var data in ClasseAttribuableToMatiere)
 			{
 				Classe classe = data.Data;
 
@@ -199,42 +204,74 @@ namespace SchoolXam.ViewModels
 				{
 					Matiere.Classes.Add(data.Data);
 
-					if (!classe.Matieres.Contains(Matiere))
+					if (!classe.Matieres.Exists(ma => ma.matiereLib == Matiere.matiereLib))
 					{
 						classe.Matieres.Add(Matiere);
 					}
 				}
 				else
 				{
-					if (classe.Matieres.Contains(Matiere))
+					Matiere.Classes.Remove(data.Data);
+
+					if (classe.Matieres.Exists(ma => ma.matiereLib == Matiere.matiereLib))
 					{
 						classe.Matieres.Remove(Matiere);
 					}
 				}
 
+				//Use for ManyToMany RelationShip on Classe_Matiere
 				if (classe.classeID != 0 && Matiere.matiereID != 0)
 				{
-					_rep.UpdateClasse(classe);
 					_rep.UpdateMatiere(Matiere);
+					_rep.UpdateClasse(classe);
 				}
+
+				// Delete devoirs
+				//List<Devoir> lstToDelete =
+				//				Matiere.Devoirs
+				//					   .FindAll(d => d.Classe.classeLib == classe.classeLib
+				//								  && d.Matiere.matiereLib == Matiere.matiereLib);
+				//foreach (Devoir devoir in lstToDelete)
+				//{
+
+				//}
+
+				//Matiere.Devoirs.Remove(devoir);
+				//classe.Devoirs.Remove(devoir);
+				//if (devoir.devoirID != 0)
+				//{
+				//	_rep.DeleteDevoir(devoir);
+				//}
 			}
 		}
 
 		private void LoadLstClasseAttribuable(Matiere matiere)
 		{
-			ClasseAttribuable = new List<SelectableData<Classe>>();
+			//Load ListClasseAttribuable with Attribuate Classe pre-load
+			ClasseAttribuableToMatiere = new List<SelectableData<Classe>>();
 
-			foreach (Classe cla in Annee.Classes)
+			foreach (Classe classe in Annee.Classes)
 			{
-				ClasseAttribuable.Add(new SelectableData<Classe>() { Data = cla });
+				ClasseAttribuableToMatiere.Add(new SelectableData<Classe>() { Data = classe });
 			}
+		}
 
-			if (matiere.Classes.Count != 0)
+		private void RefreshLstClasseAttribuable(Matiere matiere)
+		{
+			foreach (Classe classe in Annee.Classes)
 			{
-				foreach (Classe cl in matiere.Classes)
+				if (classe.Matieres
+						  .Exists(m => m.matiereLib == matiere.matiereLib)
+					&& matiere.Classes
+							  .Exists(c => c.classeLib == classe.classeLib))
 				{
-					ClasseAttribuable.Find(d => d.Data.classeLib == cl.classeLib)
-									 .Selected = true;
+					ClasseAttribuableToMatiere.Find(d => d.Data.classeLib == classe.classeLib)
+											  .Selected = true;
+				}
+				else
+				{
+					ClasseAttribuableToMatiere.Find(d => d.Data.classeLib == classe.classeLib)
+												  .Selected = false;
 				}
 			}
 		}
@@ -248,8 +285,7 @@ namespace SchoolXam.ViewModels
 				devoirLib = DevoirLib,
 				devoirCoeff = DevoirCoeff,
 				devoirNoteMax = DevoirNoteMax,
-				//Classe = LoadClasse(SelectClassePicker),
-				Classe = SelectClassePicker,
+				Classe = LoadClassePicked(SelectClassePicker),
 				Matiere = Matiere
 			};
 
@@ -286,10 +322,15 @@ namespace SchoolXam.ViewModels
 
 		}
 
-		private ObservableCollection<Devoir> GetListDevoirs_ClasseMatiere(Classe classe, Matiere matiere)
+		private Classe LoadClassePicked(Classe classe)
 		{
 			classe = Annee.Classes.Find(c => c.classeLib == classe.classeLib);
 
+			return classe;
+		}
+
+		private ObservableCollection<Devoir> GetListDevoirs_ClasseMatiere(Classe classe, Matiere matiere)
+		{
 			List<Devoir> lstDevoir = new List<Devoir>();
 
 			foreach (Devoir devoir in matiere.Devoirs)

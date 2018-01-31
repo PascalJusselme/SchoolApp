@@ -83,6 +83,7 @@
   <ItemGroup>
     <Compile Include="FileHelper_Android.cs" />
     <Compile Include="MainActivity.cs" />
+    <Compile Include="Renderers\SwitchRenderer_Android.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

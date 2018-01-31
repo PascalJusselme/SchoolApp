@@ -6,10 +6,10 @@
              xmlns:local="clr-namespace:SchoolXam.Views;assembly=SchoolXam"
              x:Class="SchoolXam.Views.ClasseDetailPage"
              Title="{Binding Classe.classeLib}">
-    
+
     <TabbedPage.Children>
-        <local:ClasseAttribElevePage/>
         <local:ClasseAttribMatierePage/>
+        <local:ClasseAttribElevePage/>
     </TabbedPage.Children>
     
 </TabbedPage>

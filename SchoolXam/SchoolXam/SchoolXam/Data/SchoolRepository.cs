@@ -28,6 +28,7 @@ namespace SchoolXam.Data
 
 		#region Eleve
 		List<Eleve> GetEleveByClasse(Classe classe);
+		void DeleteDevoir(Devoir devoir);
 		#endregion
 
 		#region Devoir
@@ -73,60 +74,78 @@ namespace SchoolXam.Data
 
 		public AnneeScolaire GetAnnee(AnneeScolaire annee)
 		{
-			return _conn.Table<AnneeScolaire>().First(an => an.anneeLib == annee.anneeLib);
+			return _conn.Table<AnneeScolaire>()
+						.First(an => an.anneeLib == annee.anneeLib);
 		}
 
 		public void SaveAnnee(AnneeScolaire annee)
 		{
 			if (annee.anneeID == 0)
 			{
-				_conn.Insert(annee);
-			}
-			else
-			{
-				_conn.Update(annee);
-			}
+				_conn.InsertWithChildren(annee);
 
-			foreach (Classe classe in annee.Classes)
-			{
-				if (classe.classeID == 0)
+				foreach (Classe classe in annee.Classes)
 				{
-					_conn.Insert(classe);
-				}
+					_conn.UpdateWithChildren(classe);
 
-				foreach (Eleve eleve in classe.Eleves)
-				{
-					if (eleve.eleveID == 0)
+					foreach (Eleve eleve in classe.Eleves)
 					{
 						_conn.Insert(eleve);
 					}
 
-					_conn.UpdateWithChildren(eleve);
-				}
-
-				foreach (Devoir devoir in classe.Devoirs)
-				{
-					if (devoir.devoirID == 0)
+					foreach (Devoir devoir in classe.Devoirs)
 					{
 						_conn.Insert(devoir);
 					}
-
-					_conn.UpdateWithChildren(devoir);
 				}
 
-				_conn.UpdateWithChildren(classe);
-			}
-
-			foreach (Matiere matiere in annee.Matieres)
-			{
-				if (matiere.matiereID == 0)
+				foreach (Matiere matiere in annee.Matieres)
 				{
-					_conn.Insert(matiere);
+					_conn.UpdateWithChildren(matiere);
+				}
+			}
+			else
+			{
+				_conn.UpdateWithChildren(annee);
+
+				foreach (Classe classe in annee.Classes)
+				{
+					if (classe.classeID == 0)
+					{
+						_conn.Insert(classe);
+					}
+
+					foreach (Eleve eleve in classe.Eleves)
+					{
+						if (eleve.eleveID ==0)
+						{
+							_conn.Insert(eleve);
+
+							_conn.UpdateWithChildren(classe);
+						}
+					}
+
+					foreach (Devoir devoir in classe.Devoirs)
+					{
+						if (devoir.devoirID == 0)
+						{
+							_conn.Insert(devoir);
+
+							_conn.UpdateWithChildren(classe);
+						}
+					}
 				}
 
-				_conn.UpdateWithChildren(matiere);
-			}
+				foreach (Matiere matiere in annee.Matieres)
+				{
+					if (matiere.matiereID == 0)
+					{
+						_conn.Insert(matiere);
+					}
 
+					_conn.UpdateWithChildren(matiere);
+				}
+			}
 		}
 		#endregion
 
@@ -168,6 +187,11 @@ namespace SchoolXam.Data
 		public List<Eleve> GetEleveByClasse(Classe classe)
 		{
 			return _conn.Table<Eleve>().Where(el => el.classeID == classe.classeID).ToList();
+		}
+
+		public void DeleteDevoir(Devoir devoir)
+		{
+			_conn.Delete(devoir);
 		}
 		#endregion
 

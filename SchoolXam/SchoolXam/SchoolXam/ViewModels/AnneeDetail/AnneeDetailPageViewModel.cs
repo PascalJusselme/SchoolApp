@@ -6,6 +6,7 @@ using SchoolXam.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace SchoolXam.ViewModels
 {
@@ -14,7 +15,9 @@ namespace SchoolXam.ViewModels
 		private readonly INavigationService _navigationService;
 		private readonly IPageDialogService _pageDialogService;
 
-		#region Annee Propertie and Command
+		#region Annee Properties and Commands
+
+		#region Annee Properties
 		private AnneeScolaire _annee;
 		public AnneeScolaire Annee
 		{
@@ -22,10 +25,23 @@ namespace SchoolXam.ViewModels
 			set { SetProperty(ref _annee, value); }
 		}
 
+		private AnneeScolaire _startedAnnee;
+		public AnneeScolaire StartedAnnee
+		{
+			get { return _startedAnnee; }
+			set { SetProperty(ref _startedAnnee, value); }
+		}
+		#endregion
+
+		#region Annee Commands
 		public DelegateCommand SaveAnneeCommand => new DelegateCommand(SaveAnnee);
 		#endregion
 
+		#endregion
+
 		#region Classe Properties and Commands
+
+		#region Classe Properties
 		private ObservableCollection<Classe> _listClasses;
 		public ObservableCollection<Classe> ListClasses
 		{
@@ -39,15 +55,18 @@ namespace SchoolXam.ViewModels
 			get { return _classeLib; }
 			set { SetProperty(ref _classeLib, value); }
 		}
+		#endregion
 
 		#region Classe Commands
 		public DelegateCommand<string> AddClasseCommand => new DelegateCommand<string>(AddClasse);
-		public DelegateCommand<Classe> SelectClasseCommand => new DelegateCommand<Classe>(ClasseSelected);
+		public DelegateCommand<Classe> SelectClasseCommand => new DelegateCommand<Classe>(SelectClasse);
 		#endregion
 
 		#endregion
 
 		#region Matiere Properties and Commands
+
+		#region Matiere Properties
 		private ObservableCollection<Matiere> _listMatieres;
 		public ObservableCollection<Matiere> ListMatieres
 		{
@@ -61,10 +80,11 @@ namespace SchoolXam.ViewModels
 			get { return _matiereLib; }
 			set { SetProperty(ref _matiereLib, value); }
 		}
+		#endregion
 
 		#region Matiere Commands
 		public DelegateCommand<string> AddMatiereCommand => new DelegateCommand<string>(AddMatiere);
-		public DelegateCommand<Matiere> SelectMatiereCommand => new DelegateCommand<Matiere>(MatiereSelected);
+		public DelegateCommand<Matiere> SelectMatiereCommand => new DelegateCommand<Matiere>(SelectMatiere);
 		#endregion
 
 		#endregion
@@ -92,12 +112,15 @@ namespace SchoolXam.ViewModels
 		#region INavigationService Implementation
 		public override void OnNavigatedFrom(NavigationParameters parameters)
 		{
-
+			if (parameters != null && parameters.ContainsKey("Annee"))
+			{
+				StartedAnnee = parameters["Annee"] as AnneeScolaire;
+			}
 		}
 
 		public override void OnNavigatedTo(NavigationParameters parameters)
 		{
-
+			
 		}
 
 		public override void OnNavigatingTo(NavigationParameters parameters)
@@ -105,7 +128,7 @@ namespace SchoolXam.ViewModels
 			if (parameters != null && parameters.ContainsKey("Annee"))
 			{
 				Annee = parameters["Annee"] as AnneeScolaire;
-				
+
 				ListClasses = new ObservableCollection<Classe>(Annee.Classes);
 				ListMatieres = new ObservableCollection<Matiere>(Annee.Matieres);
 
@@ -115,7 +138,10 @@ namespace SchoolXam.ViewModels
 
 		public override void Destroy()
 		{
-
+			if (StartedAnnee != null)
+			{
+				_rep.SaveAnnee(StartedAnnee);
+			}
 		}
 		#endregion
 
@@ -160,13 +186,13 @@ namespace SchoolXam.ViewModels
 				//Ajout de la Classe a la liste des Classes de l'Annee
 				Annee.Classes.Add(classe);
 				ListClasses.Add(classe);
-				
+
 				//Reset ClasseLib Entry
 				ClasseLib = string.Empty;
 			}
 		}
-		
-		private async void ClasseSelected(Classe classe)
+
+		private async void SelectClasse(Classe classe)
 		{
 			var parameter = new NavigationParameters
 			{
@@ -207,7 +233,7 @@ namespace SchoolXam.ViewModels
 			}
 		}
 
-		private async void MatiereSelected(Matiere matiere)
+		private async void SelectMatiere(Matiere matiere)
 		{
 			var parameter = new NavigationParameters
 			{

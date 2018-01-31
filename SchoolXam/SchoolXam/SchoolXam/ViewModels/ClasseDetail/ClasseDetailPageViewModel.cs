@@ -15,13 +15,6 @@ namespace SchoolXam.ViewModels
 		private INavigationService _navigationService;
 		private IPageDialogService _pageDialogService;
 
-		private AnneeScolaire _annee;
-		public AnneeScolaire Annee
-		{
-			get { return _annee; }
-			set { SetProperty(ref _annee, value); }
-		}
-
 		#region Classe Properties and Commands
 
 		#region Classe Properties
@@ -108,8 +101,8 @@ namespace SchoolXam.ViewModels
 		private void RaiseIsActiveChanged()
 		{
 			ListElevesbyClasse = new ObservableCollection<Eleve>(Classe.Eleves);
-			LoadLstMatiereAttribuable(Classe);
 			AffichageListeEleve(Classe);
+			RefreshLstMatiereAttribuable(Classe);
 		}
 		#endregion
 
@@ -141,11 +134,7 @@ namespace SchoolXam.ViewModels
 			{
 				Classe = parameters["Classe"] as Classe;
 
-				Annee = Classe.Annee;
-
-				ListElevesbyClasse = new ObservableCollection<Eleve>(Classe.Eleves);
-
-				AffichageListeEleve(Classe);
+				LoadLstMatiereAttribuable(Classe);
 			}
 		}
 
@@ -158,52 +147,87 @@ namespace SchoolXam.ViewModels
 		#region Classe Methods
 		private void AttribMatiereToClasse()
 		{
+			// Penser à supprimer les DEVOIRS correspondants 
+			// à la DÉSATTRIBUTION d'une MATIÈRE
+
+
 			Classe.Matieres.Clear();
 
 			foreach (var data in MatiereAttribuableToClasse)
 			{
 				Matiere matiere = data.Data;
 
-				if (data.Selected)
+				if (data.Selected
+						&& !Classe.Matieres
+								  .Exists(m => m.matiereLib == matiere.matiereLib))
 				{
-					Classe.Matieres.Add(data.Data);
+					Classe.Matieres.Add(matiere);
 
-					if (matiere.Classes.Find(cl => cl.classeLib == Classe.classeLib) == null)
+					if (!matiere.Classes.Exists(cl => cl.classeLib == Classe.classeLib))
 					{
 						matiere.Classes.Add(Classe);
 					}
 				}
 				else
 				{
-					if (matiere.Classes.Find(cl => cl.classeLib == Classe.classeLib) != null)
+					Classe.Matieres.Remove(matiere);
+
+					if (matiere.Classes.Exists(cl => cl.classeLib == Classe.classeLib))
 					{
 						matiere.Classes.Remove(Classe);
 					}
 				}
 
+				//Use for ManyToMany RelationShip on Classe_Matiere
 				if (matiere.matiereID != 0 && Classe.classeID != 0)
 				{
 					_rep.UpdateMatiere(matiere);
 					_rep.UpdateClasse(Classe);
 				}
+				
+				// Delete devoirs
+				//foreach (Devoir devoir in Classe.Devoirs)
+				//{
+				//	if (devoir.Matiere.matiereLib == matiere.matiereLib)
+				//	{
+				//		Classe.Devoirs.Remove(devoir);
+				//		matiere.Devoirs.Remove(devoir);
+				//		if (devoir.devoirID != 0)
+				//		{
+				//			_rep.DeleteDevoir(devoir);
+				//		}
+				//	}
+				//}
 			}
 		}
 
 		private void LoadLstMatiereAttribuable(Classe classe)
 		{
+			//Load ListMatiereAttribuable with Attribuate Matiere pre-load
 			MatiereAttribuableToClasse = new List<SelectableData<Matiere>>();
 
-			foreach (Matiere mat in Annee.Matieres)
+			foreach (Matiere matiere in classe.Annee.Matieres)
 			{
-				MatiereAttribuableToClasse.Add(new SelectableData<Matiere>() { Data = mat });
+				MatiereAttribuableToClasse.Add(new SelectableData<Matiere>() { Data = matiere });
 			}
+		}
 
-			if (classe.Matieres.Count != 0)
+		public void RefreshLstMatiereAttribuable(Classe classe)
+		{
+			foreach (Matiere matiere in classe.Annee.Matieres)
 			{
-				foreach (Matiere ma in classe.Matieres)
+				if (matiere.Classes
+						   .Exists(c => c.classeLib == classe.classeLib)
+					&& classe.Matieres
+							 .Exists(m => m.matiereLib == matiere.matiereLib))
 				{
-					MatiereAttribuableToClasse.Find(d => d.Data.matiereLib == ma.matiereLib)
-									  .Selected = true;
+					MatiereAttribuableToClasse.Find(d => d.Data.matiereLib == matiere.matiereLib)
+											  .Selected = true;
+				}
+				else
+				{
+					MatiereAttribuableToClasse.Find(d => d.Data.matiereLib == matiere.matiereLib)
+												  .Selected = false;
 				}
 			}
 		}

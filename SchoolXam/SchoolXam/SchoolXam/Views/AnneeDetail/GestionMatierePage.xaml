@@ -28,7 +28,7 @@
                 <behavior:EventToCommandBehavior 
                     EventName="ItemTapped" 
                     Command="{Binding SelectMatiereCommand}" 
-                    Converter="{StaticResource ItemTappedConverter}" />
+                    EventArgsConverter="{StaticResource ItemTappedConverter}" />
             </ListView.Behaviors>
             <ListView.ItemTemplate>
                 <DataTemplate>

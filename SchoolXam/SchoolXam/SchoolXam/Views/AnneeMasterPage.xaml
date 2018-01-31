@@ -25,7 +25,7 @@
                 <behavior:EventToCommandBehavior 
                     EventName="ItemTapped" 
                     Command="{Binding SelectAnneeCommand}" 
-                    Converter="{StaticResource ItemTappedConverter}" />
+                    EventArgsConverter="{StaticResource ItemTappedConverter}" />
             </ListView.Behaviors>
             <ListView.ItemTemplate>
                 <DataTemplate>

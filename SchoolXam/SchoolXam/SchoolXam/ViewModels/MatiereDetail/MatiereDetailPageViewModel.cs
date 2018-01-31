@@ -16,12 +16,12 @@ namespace SchoolXam.ViewModels
 		private INavigationService _navigationService;
 		private IPageDialogService _pageDialogService;
 
-		private AnneeScolaire _annee;
-		public AnneeScolaire Annee
-		{
-			get { return _annee; }
-			set { SetProperty(ref _annee, value); }
-		}
+		//private AnneeScolaire _annee;
+		//public AnneeScolaire Annee
+		//{
+		//	get { return _annee; }
+		//	set { SetProperty(ref _annee, value); }
+		//}
 
 		#region Matiere Properties and Commands
 
@@ -65,6 +65,21 @@ namespace SchoolXam.ViewModels
 					BlocDevoirVisible = false;
 				}
 			}
+		}
+
+
+		private bool _isVisible_CountAnneeClasse;
+		public bool IsVisible_CountAnneeClasse
+		{
+			get { return _isVisible_CountAnneeClasse; }
+			set { SetProperty(ref _isVisible_CountAnneeClasse, value); }
+		}
+
+		private string _lbl_IsVisible_lstClasseAttribuable;
+		public string Lbl_IsVisible_lstClasseAttribuable
+		{
+			get { return _lbl_IsVisible_lstClasseAttribuable; }
+			set { SetProperty(ref _lbl_IsVisible_lstClasseAttribuable, value); }
 		}
 		#endregion
 
@@ -175,7 +190,9 @@ namespace SchoolXam.ViewModels
 			{
 				Matiere = parameters["Matiere"] as Matiere;
 
-				Annee = Matiere.Annee;
+				//Annee = Matiere.Annee;
+
+				Refresh_UIMatiereDetail(Matiere);
 
 				LoadLstClasseAttribuable(Matiere);
 			}
@@ -216,18 +233,18 @@ namespace SchoolXam.ViewModels
 					{
 						classe.Matieres.Remove(Matiere);
 
-						DeleteDevoir_ClasseMatiere(classe,Matiere);
+						DeleteDevoir_ClasseMatiere(classe, Matiere);
 					}
 				}
 			}
-		}		
+		}
 
 		private void LoadLstClasseAttribuable(Matiere matiere)
 		{
 			//Load ListClasseAttribuable with Attribuate Classe pre-load
 			ClasseAttribuableToMatiere = new List<SelectableData<Classe>>();
 
-			foreach (Classe classe in Annee.Classes)
+			foreach (Classe classe in matiere.Annee.Classes)
 			{
 				ClasseAttribuableToMatiere.Add(new SelectableData<Classe>() { Data = classe });
 			}
@@ -235,7 +252,7 @@ namespace SchoolXam.ViewModels
 
 		private void RefreshLstClasseAttribuable(Matiere matiere)
 		{
-			foreach (Classe classe in Annee.Classes)
+			foreach (Classe classe in matiere.Annee.Classes)
 			{
 				if (classe.Matieres
 						  .Exists(m => m.matiereLib == matiere.matiereLib)
@@ -250,6 +267,20 @@ namespace SchoolXam.ViewModels
 					ClasseAttribuableToMatiere.Find(d => d.Data.classeLib == classe.classeLib)
 												  .Selected = false;
 				}
+			}
+		}
+
+		private void Refresh_UIMatiereDetail(Matiere matiere)
+		{
+			if (matiere.Annee.Classes.Count != 0)
+			{
+				Lbl_IsVisible_lstClasseAttribuable = $"Libellé des Classes Attribuables à la Matière";
+				IsVisible_CountAnneeClasse = true;
+			}
+			else
+			{
+				Lbl_IsVisible_lstClasseAttribuable = $"Il n'y a pas de Classes dans l'Année en cours.";
+				IsVisible_CountAnneeClasse = false;
 			}
 		}
 		#endregion
@@ -317,7 +348,7 @@ namespace SchoolXam.ViewModels
 
 		private Classe LoadClassePicked(Classe classe)
 		{
-			classe = Annee.Classes.Find(c => c.classeLib == classe.classeLib);
+			classe = classe.Annee.Classes.Find(c => c.classeLib == classe.classeLib);
 
 			return classe;
 		}

@@ -31,6 +31,20 @@ namespace SchoolXam.ViewModels
 			get { return _matiereAttribuableToClasse; }
 			set { SetProperty(ref _matiereAttribuableToClasse, value); }
 		}
+
+		private bool _isVisible_CountAnneeMatiere;
+		public bool IsVisible_CountAnneeMatiere
+		{
+			get { return _isVisible_CountAnneeMatiere; }
+			set { SetProperty(ref _isVisible_CountAnneeMatiere, value); }
+		}
+
+		private string _lbl_IsVisible_lstMatiereAttribuable;
+		public string Lbl_IsVisible_lstMatiereAttribuable
+		{
+			get { return _lbl_IsVisible_lstMatiereAttribuable; }
+			set { SetProperty(ref _lbl_IsVisible_lstMatiereAttribuable, value); }
+		}
 		#endregion
 
 		#region Classe Commands
@@ -134,6 +148,8 @@ namespace SchoolXam.ViewModels
 			{
 				Classe = parameters["Classe"] as Classe;
 
+				Refresh_UIClasseDetail(Classe);
+
 				LoadLstMatiereAttribuable(Classe);
 			}
 		}
@@ -176,7 +192,7 @@ namespace SchoolXam.ViewModels
 					if (matiere.Classes.Exists(cl => cl.classeLib == Classe.classeLib))
 					{
 						matiere.Classes.Remove(Classe);
-						DeleteDevoir_ClasseMatiere(matiere,Classe);
+						DeleteDevoir_ClasseMatiere(matiere, Classe);
 					}
 				}
 			}
@@ -210,6 +226,20 @@ namespace SchoolXam.ViewModels
 					MatiereAttribuableToClasse.Find(d => d.Data.matiereLib == matiere.matiereLib)
 												  .Selected = false;
 				}
+			}
+		}
+
+		private void Refresh_UIClasseDetail(Classe classe)
+		{
+			if (classe.Annee.Matieres.Count != 0)
+			{
+				Lbl_IsVisible_lstMatiereAttribuable = $"Libellé des Matières Attribuables à la Classe";
+				IsVisible_CountAnneeMatiere = true;
+			}
+			else
+			{
+				Lbl_IsVisible_lstMatiereAttribuable = $"Il n'y a pas de Matières dans l'Année en cours.";
+				IsVisible_CountAnneeMatiere = false;
 			}
 		}
 		#endregion

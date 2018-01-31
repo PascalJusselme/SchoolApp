@@ -28,11 +28,10 @@ namespace SchoolXam.Data
 
 		#region Eleve
 		List<Eleve> GetEleveByClasse(Classe classe);
-		void DeleteDevoir(Devoir devoir);
 		#endregion
 
 		#region Devoir
-
+		void DeleteDevoir(Devoir devoir);
 		#endregion
 	}
 
@@ -120,8 +119,6 @@ namespace SchoolXam.Data
 						if (eleve.eleveID ==0)
 						{
 							_conn.Insert(eleve);
-
-							_conn.UpdateWithChildren(classe);
 						}
 					}
 
@@ -130,10 +127,10 @@ namespace SchoolXam.Data
 						if (devoir.devoirID == 0)
 						{
 							_conn.Insert(devoir);
-
-							_conn.UpdateWithChildren(classe);
 						}
 					}
+
+					_conn.UpdateWithChildren(classe);
 				}
 
 				foreach (Matiere matiere in annee.Matieres)
@@ -188,15 +185,13 @@ namespace SchoolXam.Data
 		{
 			return _conn.Table<Eleve>().Where(el => el.classeID == classe.classeID).ToList();
 		}
+		#endregion
 
+		#region Devoir
 		public void DeleteDevoir(Devoir devoir)
 		{
 			_conn.Delete(devoir);
 		}
-		#endregion
-
-		#region Devoir
-
 		#endregion
 	}
 }

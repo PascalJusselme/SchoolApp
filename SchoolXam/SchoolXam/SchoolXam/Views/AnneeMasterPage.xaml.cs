@@ -1,12 +1,9 @@
 ﻿using Prism.Navigation;
-using SchoolXam.Behaviors;
-using SchoolXam.Models;
-using SchoolXam.ViewModels;
 using Xamarin.Forms;
 
 namespace SchoolXam.Views
 {
-    public partial class AnneeMasterPage : ContentPage, INavigatedAware
+	public partial class AnneeMasterPage : ContentPage, INavigatedAware
 	{
 		public AnneeMasterPage()
 		{

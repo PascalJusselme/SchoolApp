@@ -147,10 +147,6 @@ namespace SchoolXam.ViewModels
 		#region Classe Methods
 		private void AttribMatiereToClasse()
 		{
-			// Penser à supprimer les DEVOIRS correspondants 
-			// à la DÉSATTRIBUTION d'une MATIÈRE
-
-
 			Classe.Matieres.Clear();
 
 			foreach (var data in MatiereAttribuableToClasse)
@@ -170,34 +166,19 @@ namespace SchoolXam.ViewModels
 				}
 				else
 				{
+
+					// Implémenter PageDialog pour SIGNALER la SUPPRESSION
+					// des DEVOIRS liés à la DÉSATTRIBUTION en cours
+
+
 					Classe.Matieres.Remove(matiere);
 
 					if (matiere.Classes.Exists(cl => cl.classeLib == Classe.classeLib))
 					{
 						matiere.Classes.Remove(Classe);
+						DeleteDevoir_ClasseMatiere(matiere,Classe);
 					}
 				}
-
-				//Use for ManyToMany RelationShip on Classe_Matiere
-				if (matiere.matiereID != 0 && Classe.classeID != 0)
-				{
-					_rep.UpdateMatiere(matiere);
-					_rep.UpdateClasse(Classe);
-				}
-				
-				// Delete devoirs
-				//foreach (Devoir devoir in Classe.Devoirs)
-				//{
-				//	if (devoir.Matiere.matiereLib == matiere.matiereLib)
-				//	{
-				//		Classe.Devoirs.Remove(devoir);
-				//		matiere.Devoirs.Remove(devoir);
-				//		if (devoir.devoirID != 0)
-				//		{
-				//			_rep.DeleteDevoir(devoir);
-				//		}
-				//	}
-				//}
 			}
 		}
 
@@ -275,6 +256,24 @@ namespace SchoolXam.ViewModels
 			else
 			{
 				LabelLstEleve = $"Il n'y a aucun Élève dans la Classe : {classe.classeLib}";
+			}
+		}
+		#endregion
+
+		#region Devoir Methods
+		private void DeleteDevoir_ClasseMatiere(Matiere matiere, Classe classe)
+		{
+			Devoir dev = matiere.Devoirs.Find(d => d.Matiere.matiereLib == matiere.matiereLib);
+			Devoir devoir = classe.Devoirs.Find(d => d.Classe.classeLib == classe.classeLib);
+			if (dev != null && devoir != null)
+			{
+				classe.Devoirs.Remove(dev);
+				matiere.Devoirs.Remove(dev);
+
+				if (dev.devoirID != 0)
+				{
+					_rep.DeleteDevoir(dev);
+				}
 			}
 		}
 		#endregion

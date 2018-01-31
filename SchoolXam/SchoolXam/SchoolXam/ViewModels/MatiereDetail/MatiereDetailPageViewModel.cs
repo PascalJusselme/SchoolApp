@@ -190,10 +190,6 @@ namespace SchoolXam.ViewModels
 		#region Matiere Methods
 		private void AttribClasseToMatiere()
 		{
-			// Penser à supprimer les DEVOIRS correspondants 
-			// à la DÉSATTRIBUTION d'une CLASSE
-
-
 			Matiere.Classes.Clear();
 
 			foreach (var data in ClasseAttribuableToMatiere)
@@ -211,39 +207,20 @@ namespace SchoolXam.ViewModels
 				}
 				else
 				{
+					// Implémenter PageDialog pour SIGNALER la SUPPRESSION
+					// des DEVOIRS liés à la DÉSATTRIBUTION en cours
+
 					Matiere.Classes.Remove(data.Data);
 
 					if (classe.Matieres.Exists(ma => ma.matiereLib == Matiere.matiereLib))
 					{
 						classe.Matieres.Remove(Matiere);
+
+						DeleteDevoir_ClasseMatiere(classe,Matiere);
 					}
 				}
-
-				//Use for ManyToMany RelationShip on Classe_Matiere
-				if (classe.classeID != 0 && Matiere.matiereID != 0)
-				{
-					_rep.UpdateMatiere(Matiere);
-					_rep.UpdateClasse(classe);
-				}
-
-				// Delete devoirs
-				//List<Devoir> lstToDelete =
-				//				Matiere.Devoirs
-				//					   .FindAll(d => d.Classe.classeLib == classe.classeLib
-				//								  && d.Matiere.matiereLib == Matiere.matiereLib);
-				//foreach (Devoir devoir in lstToDelete)
-				//{
-
-				//}
-
-				//Matiere.Devoirs.Remove(devoir);
-				//classe.Devoirs.Remove(devoir);
-				//if (devoir.devoirID != 0)
-				//{
-				//	_rep.DeleteDevoir(devoir);
-				//}
 			}
-		}
+		}		
 
 		private void LoadLstClasseAttribuable(Matiere matiere)
 		{
@@ -315,6 +292,22 @@ namespace SchoolXam.ViewModels
 			}
 
 			AffichageListeDevoir();
+		}
+
+		private void DeleteDevoir_ClasseMatiere(Classe classe, Matiere matiere)
+		{
+			Devoir dev = matiere.Devoirs.Find(d => d.Matiere.matiereLib == matiere.matiereLib);
+			Devoir devoir = classe.Devoirs.Find(d => d.Classe.classeLib == classe.classeLib);
+			if (dev != null && devoir != null)
+			{
+				classe.Devoirs.Remove(devoir);
+				matiere.Devoirs.Remove(devoir);
+
+				if (devoir.devoirID != 0)
+				{
+					_rep.DeleteDevoir(dev);
+				}
+			}
 		}
 
 		private void AffichageListeDevoir()

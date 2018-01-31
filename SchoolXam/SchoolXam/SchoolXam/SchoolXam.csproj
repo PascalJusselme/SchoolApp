@@ -5,6 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Behaviors\BehaviorBase.cs" />
+    <Compile Remove="Behaviors\EventToCommandBehavior.cs" />
     <Compile Remove="ViewModels\MainPageViewModel.cs" />
     <Compile Remove="ViewModels\MasterPageViewModel.cs" />
     <Compile Remove="ViewModels\ViewModelBase.cs" />
@@ -83,6 +85,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Behaviors\" />
     <Folder Include="Effects\" />
     <Folder Include="Events\" />
     <Folder Include="Messages\" />

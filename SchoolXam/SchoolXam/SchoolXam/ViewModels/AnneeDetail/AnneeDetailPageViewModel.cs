@@ -140,6 +140,11 @@ namespace SchoolXam.ViewModels
 		{
 			if (StartedAnnee != null)
 			{
+
+				// Implémenter PageDialog pour demander si on veut RETOURNER SUR LA LISTE DES ANNEES
+				// SANS SAUVEGARDER le(s) changement(s) apportés à l'ANNÉE en cours de modif
+				// TROUVER LE MOYEN DE FAIRE CELA SANS TROP DE CHARGEMENT
+
 				_rep.SaveAnnee(StartedAnnee);
 			}
 		}

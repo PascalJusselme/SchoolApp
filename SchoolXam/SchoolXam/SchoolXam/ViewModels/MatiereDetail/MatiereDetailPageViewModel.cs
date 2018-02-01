@@ -16,13 +16,6 @@ namespace SchoolXam.ViewModels
 		private INavigationService _navigationService;
 		private IPageDialogService _pageDialogService;
 
-		//private AnneeScolaire _annee;
-		//public AnneeScolaire Annee
-		//{
-		//	get { return _annee; }
-		//	set { SetProperty(ref _annee, value); }
-		//}
-
 		#region Matiere Properties and Commands
 
 		#region Matiere Properties
@@ -55,10 +48,10 @@ namespace SchoolXam.ViewModels
 			{
 				SetProperty(ref _selectClassePicker, value);
 
-				if (_selectClassePicker != null)
+				if (SelectClassePicker != null)
 				{
 					BlocDevoirVisible = true;
-					ListDevoirs = GetListDevoirs_ClasseMatiere(LoadClassePicked(_selectClassePicker), Matiere);
+					AffichageListeDevoir();
 				}
 				else
 				{
@@ -66,7 +59,6 @@ namespace SchoolXam.ViewModels
 				}
 			}
 		}
-
 
 		private bool _isVisible_CountAnneeClasse;
 		public bool IsVisible_CountAnneeClasse
@@ -104,6 +96,20 @@ namespace SchoolXam.ViewModels
 			set { SetProperty(ref _blocDevoirVisible, value); }
 		}
 
+		private bool _isVisible_ListDevoirs;
+		public bool IsVisible_ListDevoirs
+		{
+			get { return _isVisible_ListDevoirs; }
+			set { SetProperty(ref _isVisible_ListDevoirs, value); }
+		}
+
+		private string _lbl_IsVisible_ListDevoirs;
+		public string Lbl_IsVisible_ListDevoirs
+		{
+			get { return _lbl_IsVisible_ListDevoirs; }
+			set { SetProperty(ref _lbl_IsVisible_ListDevoirs, value); }
+		}
+
 		private string _devoirLib;
 		public string DevoirLib
 		{
@@ -126,7 +132,7 @@ namespace SchoolXam.ViewModels
 		}
 
 		#region Devoir Commands
-		public DelegateCommand AddDevoirCommand => new DelegateCommand(AddDevoirClasseMatiere);
+		public DelegateCommand AddDevoirCommand => new DelegateCommand(Add_DevoirClasseMatiere);
 		#endregion
 
 		#endregion
@@ -154,10 +160,14 @@ namespace SchoolXam.ViewModels
 
 		private void RaiseIsActiveChanged()
 		{
-			ListDevoirs = new ObservableCollection<Devoir>();
-			RefreshLstClasseAttribuable(Matiere);
-			ListPickClasseMatiere = new ObservableCollection<Classe>(
-							ClasseAttribuableToMatiere.Where(d => d.Selected == true).Select(d => d.Data));
+			//RefreshLstClasseAttribuable(Matiere);
+			//ListPickClasseMatiere = new ObservableCollection<Classe>(
+			//				ClasseAttribuableToMatiere
+			//				.Where(d => d.Selected == true)
+			//				.Select(d => d.Data));
+
+			Load_Matiere(Matiere);
+
 		}
 
 		#endregion
@@ -190,11 +200,11 @@ namespace SchoolXam.ViewModels
 			{
 				Matiere = parameters["Matiere"] as Matiere;
 
-				//Annee = Matiere.Annee;
+				//ListDevoirs = new ObservableCollection<Devoir>();
 
-				Refresh_UIMatiereDetail(Matiere);
+				//Refresh_UIMatiereDetail(Matiere);
 
-				LoadLstClasseAttribuable(Matiere);
+				//LoadLstClasseAttribuable(Matiere);
 			}
 		}
 
@@ -205,6 +215,31 @@ namespace SchoolXam.ViewModels
 		#endregion
 
 		#region Matiere Methods
+		private void Load_Matiere(Matiere matiere)
+		{
+			Refresh_UIMatiere_ClasseAttribPart(matiere);
+
+			LoadLstClasseAttribuable(matiere);
+
+			Refresh_UIMatiere_DevoirPart(matiere);
+		}
+
+		private void Refresh_UIMatiere_ClasseAttribPart(Matiere matiere)
+		{
+			if (matiere.Annee.Classes.Count != 0)
+			{
+				Lbl_IsVisible_lstClasseAttribuable = $"Libellé des Classes Attribuables à la Matière";
+				IsVisible_CountAnneeClasse = true;
+			}
+			else
+			{
+				Lbl_IsVisible_lstClasseAttribuable = $"Il n'y a pas de Classes dans l'Année en cours.";
+				IsVisible_CountAnneeClasse = false;
+			}
+
+
+		}
+
 		private void AttribClasseToMatiere()
 		{
 			Matiere.Classes.Clear();
@@ -233,7 +268,7 @@ namespace SchoolXam.ViewModels
 					{
 						classe.Matieres.Remove(Matiere);
 
-						DeleteDevoir_ClasseMatiere(classe, Matiere);
+						Delete_Devoir_OnDesattribClasseMatiere(classe, Matiere);
 					}
 				}
 			}
@@ -248,6 +283,8 @@ namespace SchoolXam.ViewModels
 			{
 				ClasseAttribuableToMatiere.Add(new SelectableData<Classe>() { Data = classe });
 			}
+
+			RefreshLstClasseAttribuable(matiere);
 		}
 
 		private void RefreshLstClasseAttribuable(Matiere matiere)
@@ -270,24 +307,42 @@ namespace SchoolXam.ViewModels
 			}
 		}
 
-		private void Refresh_UIMatiereDetail(Matiere matiere)
+		private void Delete_Devoir_OnDesattribClasseMatiere(Classe classe, Matiere matiere)
 		{
-			if (matiere.Annee.Classes.Count != 0)
+			Devoir dev = matiere.Devoirs.Find(d => d.Matiere.matiereLib == matiere.matiereLib);
+			Devoir devoir = classe.Devoirs.Find(d => d.Classe.classeLib == classe.classeLib);
+			if (dev != null && devoir != null)
 			{
-				Lbl_IsVisible_lstClasseAttribuable = $"Libellé des Classes Attribuables à la Matière";
-				IsVisible_CountAnneeClasse = true;
-			}
-			else
-			{
-				Lbl_IsVisible_lstClasseAttribuable = $"Il n'y a pas de Classes dans l'Année en cours.";
-				IsVisible_CountAnneeClasse = false;
+				classe.Devoirs.Remove(devoir);
+				matiere.Devoirs.Remove(devoir);
+
+				if (devoir.devoirID != 0)
+				{
+					_rep.Delete_Devoir(dev);
+				}
 			}
 		}
 		#endregion
 
-		#region Devoirs Methods
-		private void AddDevoirClasseMatiere()
+		#region Devoirs Methods		
+		private void Refresh_UIMatiere_DevoirPart(Matiere matiere)
 		{
+			//ListPickClasseMatiere = new ObservableCollection<Classe>(
+			//				ClasseAttribuableToMatiere
+			//				.Where(d => d.Selected == true)
+			//				.Select(d => d.Data));
+
+			ListPickClasseMatiere = new ObservableCollection<Classe>(Matiere.Classes);
+
+			ListDevoirs = new ObservableCollection<Devoir>();
+		}
+
+		private void Add_DevoirClasseMatiere()
+		{
+
+			// IMPOSSIBLE DE RENTRER DES CHIFFRES A VIRGULES
+			// LES POINTS MARCHENT. VOIR A AMELIORER
+
 			Devoir devoir = new Devoir
 			{
 				devoirLib = DevoirLib,
@@ -309,6 +364,16 @@ namespace SchoolXam.ViewModels
 			{
 				DisplayAlert($"Le Libellé du Devoir existe déjà pour la Matière.");
 			}
+			else if (!Double.TryParse(DevoirCoeff.ToString(), out double devoirCoeff)
+					|| DevoirCoeff <= 0)
+			{
+				DisplayAlert($"Le Coefficient du Devoir n'est pas valide.");
+			}
+			else if (!Double.TryParse(DevoirNoteMax.ToString(), out double devoirNoteMax)
+					|| DevoirNoteMax <= 0)
+			{
+				DisplayAlert($"La Note Max du Devoir n'est pas valide.");
+			}
 			else
 			{
 				//Ajout du Devoir aux Listes de Devoir de la Classe et de la Matière sélectionnées
@@ -325,30 +390,40 @@ namespace SchoolXam.ViewModels
 			AffichageListeDevoir();
 		}
 
-		private void DeleteDevoir_ClasseMatiere(Classe classe, Matiere matiere)
+		private void AffichageListeDevoir()
 		{
-			Devoir dev = matiere.Devoirs.Find(d => d.Matiere.matiereLib == matiere.matiereLib);
-			Devoir devoir = classe.Devoirs.Find(d => d.Classe.classeLib == classe.classeLib);
-			if (dev != null && devoir != null)
-			{
-				classe.Devoirs.Remove(devoir);
-				matiere.Devoirs.Remove(devoir);
+			ListDevoirs = GetListDevoirs_ClasseMatiere(
+								LoadClassePicked(SelectClassePicker),
+								Matiere);
 
-				if (devoir.devoirID != 0)
-				{
-					_rep.DeleteDevoir(dev);
-				}
+			if (ListDevoirs.Count() != 0)
+			{
+				Lbl_IsVisible_ListDevoirs = $"Liste des Devoirs pour la classe : " +
+											$"{SelectClassePicker.classeLib} et " +
+											$"la matière : {Matiere.matiereLib}";
+				IsVisible_ListDevoirs = true;
+			}
+			else
+			{
+				Lbl_IsVisible_ListDevoirs = $"Il n'y a pas de Devoirs pour la classe : " +
+											$"{SelectClassePicker.classeLib} et " +
+											$"la matière : {Matiere.matiereLib}";
+				IsVisible_ListDevoirs = false;
 			}
 		}
 
-		private void AffichageListeDevoir()
-		{
-
-		}
-
+		/// <summary>
+		/// Method for Load Classe in Annee.Classes
+		/// corresponding to SelectClassePicker 
+		/// </summary>
+		/// <param name="classe"></param>
+		/// <returns>Classe</returns>
 		private Classe LoadClassePicked(Classe classe)
 		{
-			classe = classe.Annee.Classes.Find(c => c.classeLib == classe.classeLib);
+			if (classe != null)
+			{
+				classe = Matiere.Annee.Classes.Find(c => c.classeLib == classe.classeLib);
+			}
 
 			return classe;
 		}

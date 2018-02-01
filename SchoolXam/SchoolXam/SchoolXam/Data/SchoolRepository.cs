@@ -16,22 +16,25 @@ namespace SchoolXam.Data
 
 		#region Classe
 		List<Classe> GetClassesByAnnee(AnneeScolaire annee);
-		Classe GetClasse(Classe classe);
+		Classe GetClasseWithChildren(Classe classe);
 		void UpdateClasse(Classe classe);
 		#endregion
 
 		#region Matiere
-		List<Matiere> GetMatieresByAnnee(AnneeScolaire annee);
-		Matiere GetMatiere(Matiere matiere);
-		void UpdateMatiere(Matiere matiere);
+		List<Matiere> Get_MatieresByAnnee(AnneeScolaire annee);
+		List<Matiere> Get_MatieresWithChildrenByAnnee(AnneeScolaire annee);
+		Matiere Get_MatiereWithChildren(Matiere matiere);
+		//void Update_MatiereWithChildren(Matiere matiere);
 		#endregion
 
 		#region Eleve
-		List<Eleve> GetEleveByClasse(Classe classe);
+		List<Eleve> Get_EleveByClasse(Classe classe);
 		#endregion
 
 		#region Devoir
-		void DeleteDevoir(Devoir devoir);
+		void Delete_Devoir(Devoir devoir);
+		Devoir Get_DevoirWithChildren(Devoir devoir);
+		List<Classe> Get_ClassesWithChildrenByAnnee(AnneeScolaire annee);
 		#endregion
 	}
 
@@ -116,7 +119,7 @@ namespace SchoolXam.Data
 
 					foreach (Eleve eleve in classe.Eleves)
 					{
-						if (eleve.eleveID ==0)
+						if (eleve.eleveID == 0)
 						{
 							_conn.Insert(eleve);
 						}
@@ -152,7 +155,12 @@ namespace SchoolXam.Data
 			return _conn.Table<Classe>().Where(cl => cl.anneeID == annee.anneeID).ToList();
 		}
 
-		public Classe GetClasse(Classe classe)
+		public List<Classe> Get_ClassesWithChildrenByAnnee(AnneeScolaire annee)
+		{
+			return _conn.GetAllWithChildren<Classe>(m => m.anneeID == annee.anneeID);
+		}
+
+		public Classe GetClasseWithChildren(Classe classe)
 		{
 			return _conn.GetWithChildren<Classe>(classe.classeID);
 		}
@@ -164,33 +172,43 @@ namespace SchoolXam.Data
 		#endregion
 
 		#region Matiere
-		public List<Matiere> GetMatieresByAnnee(AnneeScolaire annee)
+		public List<Matiere> Get_MatieresByAnnee(AnneeScolaire annee)
 		{
 			return _conn.Table<Matiere>().Where(ma => ma.anneeID == annee.anneeID).ToList();
 		}
 
-		public Matiere GetMatiere(Matiere matiere)
+		public List<Matiere> Get_MatieresWithChildrenByAnnee(AnneeScolaire annee)
+		{
+			return _conn.GetAllWithChildren<Matiere>(m=>m.anneeID == annee.anneeID);
+		}
+
+		public Matiere Get_MatiereWithChildren(Matiere matiere)
 		{
 			return _conn.GetWithChildren<Matiere>(matiere.matiereID);
 		}
 
-		public void UpdateMatiere(Matiere matiere)
-		{
-			_conn.UpdateWithChildren(matiere);
-		}
+		//public void Update_MatiereWithChildren(Matiere matiere)
+		//{
+		//	_conn.UpdateWithChildren(matiere);
+		//}
 		#endregion
 
 		#region Eleve
-		public List<Eleve> GetEleveByClasse(Classe classe)
+		public List<Eleve> Get_EleveByClasse(Classe classe)
 		{
 			return _conn.Table<Eleve>().Where(el => el.classeID == classe.classeID).ToList();
 		}
 		#endregion
 
 		#region Devoir
-		public void DeleteDevoir(Devoir devoir)
+		public void Delete_Devoir(Devoir devoir)
 		{
 			_conn.Delete(devoir);
+		}
+
+		public Devoir Get_DevoirWithChildren(Devoir devoir)
+		{
+			return _conn.GetWithChildren<Devoir>(devoir.devoirID);
 		}
 		#endregion
 	}

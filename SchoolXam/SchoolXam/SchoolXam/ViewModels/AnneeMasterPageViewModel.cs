@@ -15,24 +15,26 @@ namespace SchoolXam.ViewModels
 		#region Annees Properties and Commands
 
 		#region Annees Properties
-		private ObservableCollection<AnneeScolaire> _annees;
-		public ObservableCollection<AnneeScolaire> Annees
+		private ObservableCollection<AnneeScolaire> _listAnnees;
+		public ObservableCollection<AnneeScolaire> ListAnnees
 		{
-			get { return _annees; }
-			set { SetProperty(ref _annees, value); }
+			get { return _listAnnees; }
+			set { SetProperty(ref _listAnnees, value); }
 		}
 
-		private string _labetLstAnnees;
-		public string LabetLstAnnees
+		private string _labelListAnnees;
+		public string LabelListAnnees
 		{
-			get { return _labetLstAnnees; }
-			set { SetProperty(ref _labetLstAnnees, value); }
+			get { return _labelListAnnees; }
+			set { SetProperty(ref _labelListAnnees, value); }
 		}
 		#endregion
 
 		#region Annees Commands
-		public DelegateCommand<AnneeScolaire> SelectAnneeCommand => new DelegateCommand<AnneeScolaire>(AnneeSelected);
-		public DelegateCommand AddAnneeCommand => new DelegateCommand(AddAnnee);
+		public DelegateCommand<AnneeScolaire> SelectAnneeCommand =>
+								new DelegateCommand<AnneeScolaire>(Selected_Annee);
+		public DelegateCommand AddAnneeCommand =>
+								new DelegateCommand(Add_Annee);
 		#endregion
 
 		#endregion
@@ -58,7 +60,7 @@ namespace SchoolXam.ViewModels
 
 		public override void OnNavigatingTo(NavigationParameters parameters)
 		{
-			GetAnnees();
+			Get_ListAnnees();
 		}
 
 		public override void Destroy()
@@ -68,43 +70,43 @@ namespace SchoolXam.ViewModels
 		#endregion
 
 		#region Annees Methods
-		private async void AnneeSelected(AnneeScolaire annee)
+		private async void Selected_Annee(AnneeScolaire annee)
 		{
 			var parameter = new NavigationParameters
 			{
-				{ "Annee", LoadAnnee(annee) }
+				{ "Annee", Load_Annee(annee) }
 			};
 
 			await _navigationService.NavigateAsync("AnneeDetailPage", parameter);
 		}
 
-		private async void AddAnnee()
+		private async void Add_Annee()
 		{
 			AnneeScolaire an = new AnneeScolaire();
 
 			var parameter = new NavigationParameters
 			{
-				{ "Annee", LoadAnnee(an) }
+				{ "Annee", Load_Annee(an) }
 			};
 
 			await _navigationService.NavigateAsync("AnneeDetailPage", parameter);
 		}
 
-		private void GetAnnees()
+		private void Get_ListAnnees()
 		{
-			Annees = new ObservableCollection<AnneeScolaire>(_rep.GetAnnees());
+			ListAnnees = new ObservableCollection<AnneeScolaire>(_rep.GetAnnees());
 
-			if (Annees.Count != 0)
+			if (ListAnnees.Count != 0)
 			{
-				LabetLstAnnees = $"Liste des Années Scolaire : ";
+				LabelListAnnees = $"Liste des Années Scolaire : ";
 			}
 			else
 			{
-				LabetLstAnnees = $"Il n'y a aucune Année Scolaire Enregistrée.";
+				LabelListAnnees = $"Il n'y a aucune Année Scolaire Enregistrée.";
 			}
 		}
 
-		private AnneeScolaire LoadAnnee(AnneeScolaire annee)
+		private AnneeScolaire Load_Annee(AnneeScolaire annee)
 		{
 			if (annee.anneeID == 0)
 			{
@@ -117,31 +119,56 @@ namespace SchoolXam.ViewModels
 				annee = _rep.GetAnnee(annee);
 
 				annee.Classes = _rep.GetClassesByAnnee(annee);
-				annee.Matieres = _rep.GetMatieresByAnnee(annee);
+				annee.Matieres = _rep.Get_MatieresByAnnee(annee);
 
 				foreach (Classe classe in annee.Classes)
 				{
-					Classe cl = new Classe();
-					cl = _rep.GetClasse(classe);
+					Classe cl = _rep.GetClasseWithChildren(classe);
 
 					classe.Annee = annee;
 					classe.Matieres = new List<Matiere>(cl.Matieres);
 					classe.Eleves = new List<Eleve>(cl.Eleves);
 					classe.Devoirs = new List<Devoir>(cl.Devoirs);
+
+					Load_Devoir(classe);
 				}
 
 				foreach (Matiere matiere in annee.Matieres)
 				{
 					Matiere ma = new Matiere();
-					ma = _rep.GetMatiere(matiere);
+					ma = _rep.Get_MatiereWithChildren(matiere);
 
 					matiere.Annee = annee;
 					matiere.Classes = new List<Classe>(ma.Classes);
 					matiere.Devoirs = new List<Devoir>(ma.Devoirs);
+
+					Load_Devoir(matiere);
 				}
 			}
 
 			return annee;
+		}
+
+		private void Load_Devoir(Classe classe)
+		{
+			foreach (Devoir devoir in classe.Devoirs)
+			{
+				Devoir dev = _rep.Get_DevoirWithChildren(devoir);
+
+				devoir.Classe = dev.Classe;
+				devoir.Matiere = dev.Matiere;
+			}
+		}
+
+		private void Load_Devoir(Matiere matiere)
+		{
+			foreach (Devoir devoir in matiere.Devoirs)
+			{
+				Devoir dev = _rep.Get_DevoirWithChildren(devoir);
+
+				devoir.Classe = dev.Classe;
+				devoir.Matiere = dev.Matiere;
+			}
 		}
 		#endregion
 	}

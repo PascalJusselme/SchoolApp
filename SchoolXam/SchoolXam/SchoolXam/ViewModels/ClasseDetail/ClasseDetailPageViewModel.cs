@@ -192,7 +192,7 @@ namespace SchoolXam.ViewModels
 					if (matiere.Classes.Exists(cl => cl.classeLib == Classe.classeLib))
 					{
 						matiere.Classes.Remove(Classe);
-						DeleteDevoir_ClasseMatiere(matiere, Classe);
+						Delete_Devoir_OnDesattribClasseMatiere(Classe, matiere);
 					}
 				}
 			}
@@ -291,7 +291,7 @@ namespace SchoolXam.ViewModels
 		#endregion
 
 		#region Devoir Methods
-		private void DeleteDevoir_ClasseMatiere(Matiere matiere, Classe classe)
+		private void Delete_Devoir_OnDesattribClasseMatiere(Classe classe, Matiere matiere)
 		{
 			Devoir dev = matiere.Devoirs.Find(d => d.Matiere.matiereLib == matiere.matiereLib);
 			Devoir devoir = classe.Devoirs.Find(d => d.Classe.classeLib == classe.classeLib);
@@ -302,7 +302,7 @@ namespace SchoolXam.ViewModels
 
 				if (dev.devoirID != 0)
 				{
-					_rep.DeleteDevoir(dev);
+					_rep.Delete_Devoir(dev);
 				}
 			}
 		}

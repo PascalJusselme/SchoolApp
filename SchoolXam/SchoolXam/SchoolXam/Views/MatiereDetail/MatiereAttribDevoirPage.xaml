@@ -16,13 +16,13 @@
                 ItemDisplayBinding="{Binding classeLib}"
                 SelectedItem="{Binding SelectClassePicker}"/>
         <Grid 
-            Margin="10,10,10,10"
             IsVisible="{Binding BlocDevoirVisible}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
@@ -34,32 +34,43 @@
                 Text="{Binding DevoirLib}"
                 Grid.Row="0"
                 Grid.ColumnSpan="2"/>
+            <Label 
+                Text="Note Max. du Devoir"
+                Grid.Row="1"
+                Grid.Column="0"/>
+            <Label 
+                Text="Coefficient du Devoir"
+                Grid.Row="1"
+                Grid.Column="1"/>
             <Entry 
                 x:Name="txtDevoirNoteMax"
                 Placeholder="Note Max du Devoir"
                 Text="{Binding DevoirNoteMax}"
-                Grid.Row="1"
+                Grid.Row="2"
                 Grid.Column="0"/>
             <Entry 
                 x:Name="txtDevoirCoeff"
                 Placeholder="Coeff du Devoir"
                 Text="{Binding DevoirCoeff}"
-                Grid.Row="1"
+                Grid.Row="2"
                 Grid.Column="1"/>
             <Button
                 x:Name="btnAddDevoir"
                 Text="Ajouter Devoir"
+                HorizontalOptions="Center"
                 Command="{Binding AddDevoirCommand}"
-                Grid.Row="2"
-                Grid.ColumnSpan="4"/>
+                Grid.Row="3"
+                Grid.ColumnSpan="2"/>
             <Label 
-                Text="Liste des Devoirs"
+                IsVisible="{Binding BlocDevoirVisible}"
+                Text="{Binding Lbl_IsVisible_ListDevoirs}"
                 XAlign="Center"
                 FontAttributes="Italic"
-                Grid.Row="3"
-                Grid.ColumnSpan="4"/>
+                Grid.Row="4"
+                Grid.ColumnSpan="2"/>
         </Grid>
-        <Grid>
+        <Grid
+            IsVisible="{Binding IsVisible_ListDevoirs}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="75"/>
@@ -81,7 +92,8 @@
                 XAlign="End" />
         </Grid>
         <ListView
-            ItemsSource="{Binding ListDevoirs}">
+            ItemsSource="{Binding ListDevoirs}"
+            IsVisible="{Binding Is_VisibleListDevoirs}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>

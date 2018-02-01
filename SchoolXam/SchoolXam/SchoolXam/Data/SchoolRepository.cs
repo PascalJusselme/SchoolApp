@@ -9,20 +9,20 @@ namespace SchoolXam.Data
 	public interface ISchoolRepository
 	{
 		#region AnneeScolaire
-		AnneeScolaire GetAnnee(AnneeScolaire annee);
-		List<AnneeScolaire> GetAnnees();
+		AnneeScolaire Get_Annee(AnneeScolaire annee);
+		List<AnneeScolaire> Get_ListAnnees();
 		void SaveAnnee(AnneeScolaire annee);
 		#endregion
 
 		#region Classe
 		List<Classe> GetClassesByAnnee(AnneeScolaire annee);
 		Classe GetClasseWithChildren(Classe classe);
-		void UpdateClasse(Classe classe);
+		//void UpdateClasse(Classe classe);
 		#endregion
 
 		#region Matiere
 		List<Matiere> Get_MatieresByAnnee(AnneeScolaire annee);
-		List<Matiere> Get_MatieresWithChildrenByAnnee(AnneeScolaire annee);
+		//List<Matiere> Get_MatieresWithChildrenByAnnee(AnneeScolaire annee);
 		Matiere Get_MatiereWithChildren(Matiere matiere);
 		//void Update_MatiereWithChildren(Matiere matiere);
 		#endregion
@@ -69,12 +69,12 @@ namespace SchoolXam.Data
 		#endregion
 
 		#region AnneeScolaire
-		public List<AnneeScolaire> GetAnnees()
+		public List<AnneeScolaire> Get_ListAnnees()
 		{
 			return _conn.Table<AnneeScolaire>().ToList();
 		}
 
-		public AnneeScolaire GetAnnee(AnneeScolaire annee)
+		public AnneeScolaire Get_Annee(AnneeScolaire annee)
 		{
 			return _conn.Table<AnneeScolaire>()
 						.First(an => an.anneeLib == annee.anneeLib);
@@ -165,10 +165,10 @@ namespace SchoolXam.Data
 			return _conn.GetWithChildren<Classe>(classe.classeID);
 		}
 
-		public void UpdateClasse(Classe classe)
-		{
-			_conn.UpdateWithChildren(classe);
-		}
+		//public void UpdateClasse(Classe classe)
+		//{
+		//	_conn.UpdateWithChildren(classe);
+		//}
 		#endregion
 
 		#region Matiere
@@ -177,10 +177,10 @@ namespace SchoolXam.Data
 			return _conn.Table<Matiere>().Where(ma => ma.anneeID == annee.anneeID).ToList();
 		}
 
-		public List<Matiere> Get_MatieresWithChildrenByAnnee(AnneeScolaire annee)
-		{
-			return _conn.GetAllWithChildren<Matiere>(m=>m.anneeID == annee.anneeID);
-		}
+		//public List<Matiere> Get_MatieresWithChildrenByAnnee(AnneeScolaire annee)
+		//{
+		//	return _conn.GetAllWithChildren<Matiere>(m=>m.anneeID == annee.anneeID);
+		//}
 
 		public Matiere Get_MatiereWithChildren(Matiere matiere)
 		{

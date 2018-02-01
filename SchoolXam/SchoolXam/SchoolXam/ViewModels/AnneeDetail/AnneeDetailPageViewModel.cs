@@ -5,8 +5,6 @@ using SchoolXam.Data;
 using SchoolXam.Models;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace SchoolXam.ViewModels
 {
@@ -39,65 +37,6 @@ namespace SchoolXam.ViewModels
 
 		#endregion
 
-		#region Classe Properties and Commands
-
-		#region Classe Properties
-		private ObservableCollection<Classe> _listClasses;
-		public ObservableCollection<Classe> ListClasses
-		{
-			get { return _listClasses; }
-			set { SetProperty(ref _listClasses, value); }
-		}
-
-		private string _classeLib;
-		public string ClasseLib
-		{
-			get { return _classeLib; }
-			set { SetProperty(ref _classeLib, value); }
-		}
-		#endregion
-
-		#region Classe Commands
-		public DelegateCommand<string> AddClasseCommand => new DelegateCommand<string>(AddClasse);
-		public DelegateCommand<Classe> SelectClasseCommand => new DelegateCommand<Classe>(SelectClasse);
-		#endregion
-
-		#endregion
-
-		#region Matiere Properties and Commands
-
-		#region Matiere Properties
-		private ObservableCollection<Matiere> _listMatieres;
-		public ObservableCollection<Matiere> ListMatieres
-		{
-			get { return _listMatieres; }
-			set { SetProperty(ref _listMatieres, value); }
-		}
-
-		private string _matiereLib;
-		public string MatiereLib
-		{
-			get { return _matiereLib; }
-			set { SetProperty(ref _matiereLib, value); }
-		}
-		#endregion
-
-		#region Matiere Commands
-		public DelegateCommand<string> AddMatiereCommand => new DelegateCommand<string>(AddMatiere);
-		public DelegateCommand<Matiere> SelectMatiereCommand => new DelegateCommand<Matiere>(SelectMatiere);
-		#endregion
-
-		#endregion
-
-		#region IPageDialogService Propertie and Method
-		public DelegateCommand<string> DisplayAlertCommand => new DelegateCommand<string>(DisplayAlert);
-
-		private async void DisplayAlert(string message)
-		{
-			await _pageDialogService.DisplayAlertAsync("Alert", message, "Accept", "Cancel");
-		}
-		#endregion
-
 		public AnneeDetailPageViewModel(
 			INavigationService navigationService,
 			IPageDialogService pageDialogService,
@@ -108,47 +47,6 @@ namespace SchoolXam.ViewModels
 
 			_pageDialogService = pageDialogService;
 		}
-
-		#region INavigationService Implementation
-		public override void OnNavigatedFrom(NavigationParameters parameters)
-		{
-			if (parameters != null && parameters.ContainsKey("Annee"))
-			{
-				StartedAnnee = parameters["Annee"] as AnneeScolaire;
-			}
-		}
-
-		public override void OnNavigatedTo(NavigationParameters parameters)
-		{
-			
-		}
-
-		public override void OnNavigatingTo(NavigationParameters parameters)
-		{
-			if (parameters != null && parameters.ContainsKey("Annee"))
-			{
-				Annee = parameters["Annee"] as AnneeScolaire;
-
-				ListClasses = new ObservableCollection<Classe>(Annee.Classes);
-				ListMatieres = new ObservableCollection<Matiere>(Annee.Matieres);
-
-				Title = Annee.anneeLib;
-			}
-		}
-
-		public override void Destroy()
-		{
-			if (StartedAnnee != null)
-			{
-
-				// Implémenter PageDialog pour demander si on veut RETOURNER SUR LA LISTE DES ANNEES
-				// SANS SAUVEGARDER le(s) changement(s) apportés à l'ANNÉE en cours de modif
-				// TROUVER LE MOYEN DE FAIRE CELA SANS TROP DE CHARGEMENT
-
-				_rep.SaveAnnee(StartedAnnee);
-			}
-		}
-		#endregion
 
 		#region AnneeScolaire Methods
 		private async void SaveAnnee()
@@ -164,88 +62,136 @@ namespace SchoolXam.ViewModels
 				await _navigationService.GoBackToRootAsync();
 			}
 		}
-		#endregion
 
-		#region Classe Methods
-		private void AddClasse(string classeLib)
+		private AnneeScolaire Load_Annee(AnneeScolaire annee)
 		{
-			Classe classe = new Classe
+			if (annee.anneeID == 0)
 			{
-				classeLib = classeLib,
-				Annee = Annee,
-				Matieres = new List<Matiere>(),
-				Eleves = new List<Eleve>(),
-				Devoirs = new List<Devoir>()
-			};
-
-			if (String.IsNullOrEmpty(classe.classeLib) || String.IsNullOrWhiteSpace(classe.classeLib))
-			{
-				DisplayAlert($"Le Libellé de la Classe ne peut pas être vide.");
-			}
-			else if (classe.Annee.Classes.Exists(cl => cl.classeLib == classe.classeLib))
-			{
-				DisplayAlert($"Le Libellé de la Classe existe déjà pour cette Année Scolaire.");
+				annee.anneeLib = string.Empty;
+				annee.Classes = new List<Classe>();
+				annee.Matieres = new List<Matiere>();
 			}
 			else
 			{
-				//Ajout de la Classe a la liste des Classes de l'Annee
-				Annee.Classes.Add(classe);
-				ListClasses.Add(classe);
+				annee = _rep.Get_Annee(annee);
 
-				//Reset ClasseLib Entry
-				ClasseLib = string.Empty;
+				annee.Classes = _rep.GetClassesByAnnee(annee);
+				annee.Matieres = _rep.Get_MatieresByAnnee(annee);
+
+				foreach (Classe classe in annee.Classes)
+				{
+					Classe cl = _rep.GetClasseWithChildren(classe);
+
+					classe.Annee = annee;
+					classe.Matieres = new List<Matiere>(cl.Matieres);
+					classe.Eleves = new List<Eleve>(cl.Eleves);
+					classe.Devoirs = new List<Devoir>(cl.Devoirs);
+
+					Load_Devoir(classe);
+				}
+
+				foreach (Matiere matiere in annee.Matieres)
+				{
+					Matiere ma = new Matiere();
+					ma = _rep.Get_MatiereWithChildren(matiere);
+
+					matiere.Annee = annee;
+					matiere.Classes = new List<Classe>(ma.Classes);
+					matiere.Devoirs = new List<Devoir>(ma.Devoirs);
+
+					Load_Devoir(matiere);
+				}
+			}
+
+			return annee;
+		}
+
+		private void Load_Devoir(Classe classe)
+		{
+			foreach (Devoir devoir in classe.Devoirs)
+			{
+				Devoir dev = _rep.Get_DevoirWithChildren(devoir);
+
+				devoir.Classe = dev.Classe;
+				devoir.Matiere = dev.Matiere;
 			}
 		}
 
-		private async void SelectClasse(Classe classe)
+		private void Load_Devoir(Matiere matiere)
 		{
-			var parameter = new NavigationParameters
+			foreach (Devoir devoir in matiere.Devoirs)
 			{
-				{ "Classe", classe }
-			};
+				Devoir dev = _rep.Get_DevoirWithChildren(devoir);
 
-			await _navigationService.NavigateAsync("ClasseDetailPage", parameter);
+				devoir.Classe = dev.Classe;
+				devoir.Matiere = dev.Matiere;
+			}
 		}
 		#endregion
 
-		#region Matiere Methods
-		private void AddMatiere(string matiereLib)
+		#region IPageDialogService Propertie and Method
+		public DelegateCommand<string> DisplayAlertCommand => new DelegateCommand<string>(DisplayAlert);
+		public DelegateCommand DisplayActionSheetCommand => new DelegateCommand(DisplayActionSheet);
+		public DelegateCommand DisplayActionSheetUsingActionSheetButtonsCommand =>
+							new DelegateCommand(DisplayActionSheetUsingActionSheetButtons);
+
+		private async void DisplayAlert(string message)
 		{
-			Matiere matiere = new Matiere
-			{
-				matiereLib = matiereLib,
-				Annee = Annee,
-				Classes = new List<Classe>(),
-				Devoirs = new List<Devoir>()
-			};
+			await _pageDialogService.DisplayAlertAsync("Alert", message, "Accept", "Cancel");
+		}
 
-			if (String.IsNullOrEmpty(matiere.matiereLib) || String.IsNullOrWhiteSpace(matiere.matiereLib))
-			{
-				DisplayAlert($"Le Libellé de la Matière ne peut pas être vide.");
-			}
-			else if (matiere.Annee.Matieres.Exists(ma => ma.matiereLib == matiere.matiereLib))
-			{
-				DisplayAlert($"Le Libellé de la Matière existe déjà pour cette Année Scolaire.");
-			}
-			else
-			{
-				//Ajout de la Matiere a la liste des Matieres de l'Annee
-				Annee.Matieres.Add(matiere);
-				ListMatieres.Add(matiere);
+		private async void DisplayActionSheet()
+		{
+			await _pageDialogService.DisplayActionSheetAsync("ActionSheet", "Cancel", "Destroy", "Option 1", "Option 2");
+		}
 
-				//Reset MatiereLib Entry
-				MatiereLib = string.Empty;
+		private async void DisplayActionSheetUsingActionSheetButtons()
+		{
+			//IActionSheetButton option1Action =
+			//ActionSheetButton.CreateButton("Option 1", new DelegateCommand(() => { Debug.WriteLine("Option 1"); }));
+			//IActionSheetButton option2Action =
+			//ActionSheetButton.CreateButton("Option 2", new DelegateCommand(() => { Debug.WriteLine("Option 2"); }));
+			//IActionSheetButton cancelAction =
+			//ActionSheetButton.CreateCancelButton("Cancel", new DelegateCommand(() => { Debug.WriteLine("Cancel"); }));
+			//IActionSheetButton destroyAction =
+			//ActionSheetButton.CreateDestroyButton("Destroy", new DelegateCommand(() => { Debug.WriteLine("Destroy"); }));
+
+			//await _pageDialogService.DisplayActionSheetAsync("ActionSheet with ActionSheetButtons", option1Action, option2Action, cancelAction, destroyAction);
+		}
+		#endregion
+
+		#region INavigationService Implementation
+		public override void OnNavigatedFrom(NavigationParameters parameters)
+		{
+			// Implémenter PageDialog pour demander si on veut RETOURNER SUR LA LISTE DES ANNEES
+			// SANS SAUVEGARDER le(s) changement(s) apportés à l'ANNÉE en cours de modif
+			// TROUVER LE MOYEN DE FAIRE CELA SANS TROP DE CHARGEMENT
+
+			//_rep.SaveAnnee(StartedAnnee);
+		}
+
+		public override void OnNavigatedTo(NavigationParameters parameters)
+		{
+			
+		}
+
+		public override void OnNavigatingTo(NavigationParameters parameters)
+		{
+			if (parameters != null && parameters.ContainsKey("Annee"))
+			{
+				Annee = parameters["Annee"] as AnneeScolaire;
+
+				// Sauvegarde de l'Année à son état à la selection
+				// pour ecraser les modifs si on veut pas sauvegarder
+				StartedAnnee = Load_Annee(Annee);
+
+				Title = Annee.anneeLib;
 			}
 		}
 
-		private async void SelectMatiere(Matiere matiere)
+		public override void Destroy()
 		{
-			var parameter = new NavigationParameters
-			{
-				{ "Matiere", matiere }
-			};
 
-			await _navigationService.NavigateAsync("MatiereDetailPage", parameter);
 		}
 		#endregion
 	}

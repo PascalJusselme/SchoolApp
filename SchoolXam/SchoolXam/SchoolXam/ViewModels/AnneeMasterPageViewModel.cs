@@ -94,7 +94,7 @@ namespace SchoolXam.ViewModels
 
 		private void Get_ListAnnees()
 		{
-			ListAnnees = new ObservableCollection<AnneeScolaire>(_rep.GetAnnees());
+			ListAnnees = new ObservableCollection<AnneeScolaire>(_rep.Get_ListAnnees());
 
 			if (ListAnnees.Count != 0)
 			{
@@ -116,7 +116,7 @@ namespace SchoolXam.ViewModels
 			}
 			else
 			{
-				annee = _rep.GetAnnee(annee);
+				annee = _rep.Get_Annee(annee);
 
 				annee.Classes = _rep.GetClassesByAnnee(annee);
 				annee.Matieres = _rep.Get_MatieresByAnnee(annee);

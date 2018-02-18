@@ -2,17 +2,49 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             xmlns:validate="clr-namespace:SchoolXam.Validation"
+             xmlns:convert="clr-namespace:SchoolXam.Converters"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="SchoolXam.Views.GestionAnneePage"
              Title="Gestion Annee Scolaire">
+    <!--
+             xmlns:validation="clr-namespace:SchoolXam.Validation"
+             xmlns:effects="clr-namespace:SchoolXam.Effects"-->
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <convert:FirstErrorConverter x:Key="FirstErrorConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <StackLayout
         Margin="10,10,10,10">
         <Label 
             Text="Libellé de l'Année Scolaire à ajouter"/>
-        <Entry
+        <!--<Entry
             x:Name="AnneeLib"
             Text="{Binding Annee.anneeLib, Mode=TwoWay}"
             Placeholder="Libellé de l'Année Scolaire">
+        </Entry>-->
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="40"/>
+            </Grid.RowDefinitions>
+        <Entry 
+            Placeholder="Enter Annee Lib here" 
+            Text="{Binding Annee.anneeLib, Mode=TwoWay}" 
+            validate:Validation.Errors="{Binding Annee.Errors[anneeLib]}" />
+        <Label 
+            Grid.Row="1" 
+            Text="{Binding Annee.Errors[anneeLib], Converter={StaticResource FirstErrorConverter}" 
+            FontSize="Small" 
+            TextColor="Red" />            
+        </Grid>
+        <!--<Entry Text="{Binding anneeLib, Mode=TwoWay}" BindingContext="{Binding Annee}">
+            <Entry.Behaviors>
+                <validation:EntryValidationBehavior PropertyName="anneeLib" />
+            </Entry.Behaviors>
         </Entry>
+        <ListView 
+                ItemsSource="{Binding Annee.ErrorsList}" />-->
     </StackLayout>
 </ContentPage>

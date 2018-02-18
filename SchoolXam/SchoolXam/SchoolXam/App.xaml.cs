@@ -39,6 +39,7 @@ namespace SchoolXam
 			Container.RegisterTypeForNavigation<GestionMatierePage>();
 
 			Container.RegisterTypeForNavigation<ClasseDetailPage>();
+			Container.RegisterTypeForNavigation<ClasseModifLibPage>();
 			Container.RegisterTypeForNavigation<ClasseAttribMatierePage>();
 			Container.RegisterTypeForNavigation<ClasseAttribElevePage>();
 

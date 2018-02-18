@@ -7,9 +7,8 @@
              x:Class="SchoolXam.Views.ClasseDetailPage"
              Title="{Binding Classe.classeLib}">
 
-    <TabbedPage.Children>
-        <local:ClasseAttribMatierePage/>
-        <local:ClasseAttribElevePage/>
-    </TabbedPage.Children>
-    
+    <local:ClasseModifLibPage/>
+    <local:ClasseAttribMatierePage/>
+    <local:ClasseAttribElevePage/>
+
 </TabbedPage>

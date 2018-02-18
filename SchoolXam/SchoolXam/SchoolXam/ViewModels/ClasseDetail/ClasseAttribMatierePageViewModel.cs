@@ -55,51 +55,6 @@ namespace SchoolXam.ViewModels
 
 		}
 
-		#region IActiveAware Implementation
-		public event EventHandler IsActiveChanged;
-
-		protected static bool HasInitialized { get; set; }
-
-		private bool isActive;
-		public bool IsActive
-		{
-			get => isActive;
-			set => SetProperty(ref isActive, value, RaiseIsActiveChanged);
-		}
-
-		private void RaiseIsActiveChanged()
-		{
-			Refresh_UIClasseDetail(Classe);
-
-			LoadLstMatiereAttribuable(Classe);
-		}
-		#endregion
-
-		#region INavigationService Implementation
-		public override void OnNavigatedFrom(NavigationParameters parameters)
-		{
-
-		}
-
-		public override void OnNavigatedTo(NavigationParameters parameters)
-		{
-
-		}
-
-		public override void OnNavigatingTo(NavigationParameters parameters)
-		{
-			if (parameters != null && parameters.ContainsKey("Classe"))
-			{
-				Classe = parameters["Classe"] as Classe;
-			}
-		}
-
-		public override void Destroy()
-		{
-
-		}
-		#endregion
-
 		#region Classe Methods
 		private void AttribMatiereToClasse()
 		{
@@ -186,21 +141,48 @@ namespace SchoolXam.ViewModels
 		}
 		#endregion
 
-		#region Devoir Methods
-		private void Delete_Devoir_OnDesattribClasseMatiere(Classe classe, Matiere matiere)
+		#region IActiveAware Implementation
+		public event EventHandler IsActiveChanged;
+
+		protected static bool HasInitialized { get; set; }
+
+		private bool isActive;
+		public bool IsActive
 		{
-			Devoir dev = matiere.Devoirs.Find(d => d.Matiere.matiereLib == matiere.matiereLib);
-			Devoir devoir = classe.Devoirs.Find(d => d.Classe.classeLib == classe.classeLib);
-			if (dev != null && devoir != null)
+			get => isActive;
+			set => SetProperty(ref isActive, value, RaiseIsActiveChanged);
+		}
+
+		private void RaiseIsActiveChanged()
+		{
+			Refresh_UIClasseDetail(Classe);
+
+			LoadLstMatiereAttribuable(Classe);
+		}
+		#endregion
+
+		#region INavigationService Implementation
+		public override void OnNavigatedFrom(NavigationParameters parameters)
+		{
+
+		}
+
+		public override void OnNavigatedTo(NavigationParameters parameters)
+		{
+
+		}
+
+		public override void OnNavigatingTo(NavigationParameters parameters)
+		{
+			if (parameters != null && parameters.ContainsKey("Classe"))
 			{
-				classe.Devoirs.Remove(dev);
-				matiere.Devoirs.Remove(dev);
-				// Vérifier si vraiment besoin
-				if (dev.devoirID != 0)
-				{
-					_rep.Delete_Devoir(dev);
-				}
+				Classe = parameters["Classe"] as Classe;
 			}
+		}
+
+		public override void Destroy()
+		{
+
 		}
 		#endregion
 	}

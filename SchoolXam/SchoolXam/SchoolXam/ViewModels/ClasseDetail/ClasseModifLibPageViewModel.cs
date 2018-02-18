@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using Prism;
+﻿using Prism;
 using Prism.Commands;
+using Prism.Mvvm;
 using Prism.Navigation;
-using Prism.Services;
 using SchoolXam.Data;
 using SchoolXam.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SchoolXam.ViewModels
 {
-	public class ClasseDetailPageViewModel : BaseViewModel
+	public class ClasseModifLibPageViewModel : BaseViewModel,IActiveAware
 	{
 		private Classe _classe;
 		public Classe Classe
@@ -19,10 +19,29 @@ namespace SchoolXam.ViewModels
 			set { SetProperty(ref _classe, value); }
 		}
 
-		public ClasseDetailPageViewModel(SchoolRepository db) : base(db)
+		public ClasseModifLibPageViewModel(SchoolRepository db) : base(db)
 		{
 
+        }
+
+		#region IActiveAware Implementation
+		public event EventHandler IsActiveChanged;
+
+		protected static bool HasInitialized { get; set; }
+
+		private bool isActive;
+
+		public bool IsActive
+		{
+			get => isActive;
+			set => SetProperty(ref isActive, value, RaiseIsActiveChanged);
 		}
+
+		private void RaiseIsActiveChanged()
+		{
+			
+		}
+		#endregion
 
 		#region INavigationService Implementation
 		public override void OnNavigatedFrom(NavigationParameters parameters)

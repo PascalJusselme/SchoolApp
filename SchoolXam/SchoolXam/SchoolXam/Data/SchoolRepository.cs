@@ -17,14 +17,11 @@ namespace SchoolXam.Data
 		#region Classe
 		List<Classe> GetClassesByAnnee(AnneeScolaire annee);
 		Classe GetClasseWithChildren(Classe classe);
-		//void UpdateClasse(Classe classe);
 		#endregion
 
 		#region Matiere
 		List<Matiere> Get_MatieresByAnnee(AnneeScolaire annee);
-		//List<Matiere> Get_MatieresWithChildrenByAnnee(AnneeScolaire annee);
 		Matiere Get_MatiereWithChildren(Matiere matiere);
-		//void Update_MatiereWithChildren(Matiere matiere);
 		#endregion
 
 		#region Eleve
@@ -90,20 +87,9 @@ namespace SchoolXam.Data
 				{
 					_conn.UpdateWithChildren(classe);
 
-					foreach (Eleve eleve in classe.Eleves)
-					{
-						_conn.Insert(eleve);
-					}
+					_conn.InsertOrReplaceAllWithChildren(classe.Eleves);
 
-					foreach (Devoir devoir in classe.Devoirs)
-					{
-						_conn.Insert(devoir);
-					}
-				}
-
-				foreach (Matiere matiere in annee.Matieres)
-				{
-					_conn.UpdateWithChildren(matiere);
+					_conn.InsertOrReplaceAllWithChildren(classe.Devoirs);
 				}
 			}
 			else
@@ -112,38 +98,11 @@ namespace SchoolXam.Data
 
 				foreach (Classe classe in annee.Classes)
 				{
-					if (classe.classeID == 0)
-					{
-						_conn.Insert(classe);
-					}
-
-					foreach (Eleve eleve in classe.Eleves)
-					{
-						if (eleve.eleveID == 0)
-						{
-							_conn.Insert(eleve);
-						}
-					}
-
-					foreach (Devoir devoir in classe.Devoirs)
-					{
-						if (devoir.devoirID == 0)
-						{
-							_conn.Insert(devoir);
-						}
-					}
-
 					_conn.UpdateWithChildren(classe);
-				}
 
-				foreach (Matiere matiere in annee.Matieres)
-				{
-					if (matiere.matiereID == 0)
-					{
-						_conn.Insert(matiere);
-					}
+					_conn.InsertOrReplaceAllWithChildren(classe.Eleves);
 
-					_conn.UpdateWithChildren(matiere);
+					_conn.InsertOrReplaceAllWithChildren(classe.Devoirs);
 				}
 			}
 		}
@@ -164,11 +123,6 @@ namespace SchoolXam.Data
 		{
 			return _conn.GetWithChildren<Classe>(classe.classeID);
 		}
-
-		//public void UpdateClasse(Classe classe)
-		//{
-		//	_conn.UpdateWithChildren(classe);
-		//}
 		#endregion
 
 		#region Matiere

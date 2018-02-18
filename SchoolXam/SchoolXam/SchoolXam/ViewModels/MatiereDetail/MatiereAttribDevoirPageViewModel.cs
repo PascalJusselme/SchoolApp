@@ -284,6 +284,5 @@ namespace SchoolXam.ViewModels
 			await _pageDialogService.DisplayAlertAsync("Alert", message, "Accept", "Cancel");
 		}
 		#endregion
-
 	}
 }

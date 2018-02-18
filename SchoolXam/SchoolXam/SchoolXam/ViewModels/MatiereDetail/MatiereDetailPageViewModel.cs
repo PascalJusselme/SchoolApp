@@ -1,13 +1,6 @@
-﻿using Prism;
-using Prism.Commands;
-using Prism.Navigation;
-using Prism.Services;
+﻿using Prism.Navigation;
 using SchoolXam.Data;
 using SchoolXam.Models;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace SchoolXam.ViewModels
 {
@@ -49,6 +42,5 @@ namespace SchoolXam.ViewModels
 
 		}
 		#endregion
-
 	}
 }

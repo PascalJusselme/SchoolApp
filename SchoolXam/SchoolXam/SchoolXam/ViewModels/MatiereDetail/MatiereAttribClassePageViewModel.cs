@@ -138,22 +138,6 @@ namespace SchoolXam.ViewModels
 				}
 			}
 		}
-
-		private void Delete_Devoir_OnDesattribClasseMatiere(Classe classe, Matiere matiere)
-		{
-			Devoir dev = matiere.Devoirs.Find(d => d.Matiere.matiereLib == matiere.matiereLib);
-			Devoir devoir = classe.Devoirs.Find(d => d.Classe.classeLib == classe.classeLib);
-			if (dev != null && devoir != null)
-			{
-				classe.Devoirs.Remove(devoir);
-				matiere.Devoirs.Remove(devoir);
-				// Vérifier si vraiment besoin
-				if (devoir.devoirID != 0)
-				{
-					_rep.Delete_Devoir(dev);
-				}
-			}
-		}
 		#endregion
 
 		#region IActiveAware Implementation

@@ -60,59 +60,6 @@ namespace SchoolXam.ViewModels
 			_pageDialogService = pageDialogService;
 		}
 
-		#region IActiveAware Implementation
-		public event EventHandler IsActiveChanged;
-
-		protected static bool HasInitialized { get; set; }
-
-		private bool isActive;
-
-		public bool IsActive
-		{
-			get => isActive;
-			set => SetProperty(ref isActive, value, RaiseIsActiveChanged);
-		}
-
-		private void RaiseIsActiveChanged()
-		{
-			ListElevesbyClasse = new ObservableCollection<Eleve>(Classe.Eleves);
-			AffichageListeEleve(Classe);
-		}
-		#endregion
-
-		#region IPageDialogService Command and Method
-		public DelegateCommand<string> DisplayAlertCommand => new DelegateCommand<string>(DisplayAlert);
-
-		private async void DisplayAlert(string message)
-		{
-			await _pageDialogService.DisplayAlertAsync("Alert", message, "Accept", "Cancel");
-		}
-		#endregion
-
-		#region INavigationService Implementation
-		public override void OnNavigatedFrom(NavigationParameters parameters)
-		{
-
-		}
-
-		public override void OnNavigatedTo(NavigationParameters parameters)
-		{
-
-		}
-
-		public override void OnNavigatingTo(NavigationParameters parameters)
-		{
-			if (parameters != null && parameters.ContainsKey("Classe"))
-			{
-				Classe = parameters["Classe"] as Classe;
-			}
-		}
-
-		public override void Destroy()
-		{
-
-		}
-		#endregion
 
 		#region Eleve Methods
 		private void AddEleveToClasse()
@@ -157,6 +104,60 @@ namespace SchoolXam.ViewModels
 			{
 				LabelLstEleve = $"Il n'y a aucun Élève dans la Classe : {classe.classeLib}";
 			}
+		}
+		#endregion
+
+		#region IActiveAware Implementation
+		public event EventHandler IsActiveChanged;
+
+		protected static bool HasInitialized { get; set; }
+
+		private bool isActive;
+
+		public bool IsActive
+		{
+			get => isActive;
+			set => SetProperty(ref isActive, value, RaiseIsActiveChanged);
+		}
+
+		private void RaiseIsActiveChanged()
+		{
+			ListElevesbyClasse = new ObservableCollection<Eleve>(Classe.Eleves);
+			AffichageListeEleve(Classe);
+		}
+		#endregion
+
+		#region INavigationService Implementation
+		public override void OnNavigatedFrom(NavigationParameters parameters)
+		{
+
+		}
+
+		public override void OnNavigatedTo(NavigationParameters parameters)
+		{
+
+		}
+
+		public override void OnNavigatingTo(NavigationParameters parameters)
+		{
+			if (parameters != null && parameters.ContainsKey("Classe"))
+			{
+				Classe = parameters["Classe"] as Classe;
+			}
+		}
+
+		public override void Destroy()
+		{
+
+		}
+		#endregion
+
+		#region IPageDialogService Command and Method
+		public DelegateCommand<string> DisplayAlertCommand => new DelegateCommand<string>(DisplayAlert);
+
+		private async void DisplayAlert(string message)
+		{
+			await _pageDialogService.DisplayAlertAsync("Alert", message, "Accept", "Cancel");
 		}
 		#endregion
 	}

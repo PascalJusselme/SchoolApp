@@ -14,7 +14,7 @@ namespace SchoolXam.ViewModels
 	{
 		private readonly INavigationService _navigationService;
 		private readonly IPageDialogService _pageDialogService;
-		
+
 		#region Annee Properties
 		private AnneeScolaire _annee;
 		public AnneeScolaire Annee
@@ -43,7 +43,7 @@ namespace SchoolXam.ViewModels
 		#endregion
 
 		#region Matiere Commands
-		public DelegateCommand<string> AddMatiereCommand => new DelegateCommand<string>(AddMatiere);
+		public DelegateCommand AddMatiereCommand => new DelegateCommand(AddMatiere);
 		public DelegateCommand<Matiere> SelectMatiereCommand => new DelegateCommand<Matiere>(SelectMatiere);
 		#endregion
 
@@ -61,33 +61,16 @@ namespace SchoolXam.ViewModels
 		}
 
 		#region Matiere Methods
-		private void AddMatiere(string matiereLib)
+		private async void AddMatiere()
 		{
-			Matiere matiere = new Matiere
+			Matiere matiere = new Matiere(Annee);
+
+			var parameter = new NavigationParameters
 			{
-				matiereLib = matiereLib,
-				Annee = Annee,
-				Classes = new List<Classe>(),
-				Devoirs = new List<Devoir>()
+				{ "Matiere", matiere }
 			};
 
-			if (String.IsNullOrEmpty(matiere.matiereLib) || String.IsNullOrWhiteSpace(matiere.matiereLib))
-			{
-				DisplayAlert($"Le Libellé de la Matière ne peut pas être vide.");
-			}
-			else if (matiere.Annee.Matieres.Exists(ma => ma.matiereLib == matiere.matiereLib))
-			{
-				DisplayAlert($"Le Libellé de la Matière existe déjà pour cette Année Scolaire.");
-			}
-			else
-			{
-				//Ajout de la Matiere a la liste des Matieres de l'Annee
-				Annee.Matieres.Add(matiere);
-				ListMatieres.Add(matiere);
-
-				//Reset MatiereLib Entry
-				MatiereLib = string.Empty;
-			}
+			await _navigationService.NavigateAsync("MatiereDetailPage", parameter);
 		}
 
 		private async void SelectMatiere(Matiere matiere)
@@ -137,16 +120,11 @@ namespace SchoolXam.ViewModels
 				Annee = parameters["Annee"] as AnneeScolaire;
 			}
 		}
-
-		public override void Destroy()
-		{
-
-		}
 		#endregion
 
 		#region IPageDialogService Propertie and Method
 		public DelegateCommand<string> DisplayAlertCommand => new DelegateCommand<string>(DisplayAlert);
-		
+
 		private async void DisplayAlert(string message)
 		{
 			await _pageDialogService.DisplayAlertAsync("Alert", message, "Accept", "Cancel");

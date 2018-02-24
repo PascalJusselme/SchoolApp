@@ -6,7 +6,16 @@
              xmlns:local="clr-namespace:SchoolXam.Views;assembly=SchoolXam"
              x:Class="SchoolXam.Views.ClasseDetailPage"
              Title="{Binding Classe.classeLib}">
-
+    
+    <TabbedPage.ToolbarItems>
+        <ToolbarItem 
+            Text="SaveClasse" 
+            Command="{Binding SaveClasseCommand} "/>
+        <ToolbarItem 
+            Text="Exit" 
+            Command="{Binding ExitClasseCommand} "/>
+    </TabbedPage.ToolbarItems>
+    
     <local:ClasseModifLibPage/>
     <local:ClasseAttribMatierePage/>
     <local:ClasseAttribElevePage/>

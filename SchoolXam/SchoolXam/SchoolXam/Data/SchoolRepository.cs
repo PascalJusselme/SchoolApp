@@ -12,11 +12,13 @@ namespace SchoolXam.Data
 		AnneeScolaire Get_Annee(AnneeScolaire annee);
 		List<AnneeScolaire> Get_ListAnnees();
 		void SaveAnnee(AnneeScolaire annee);
+		void DeleteAnnee(AnneeScolaire annee);
 		#endregion
 
 		#region Classe
 		List<Classe> GetClassesByAnnee(AnneeScolaire annee);
 		Classe GetClasseWithChildren(Classe classe);
+		void DeleteClasse(Classe classe);
 		#endregion
 
 		#region Matiere
@@ -31,7 +33,6 @@ namespace SchoolXam.Data
 		#region Devoir
 		void Delete_Devoir(Devoir devoir);
 		Devoir Get_DevoirWithChildren(Devoir devoir);
-		List<Classe> Get_ClassesWithChildrenByAnnee(AnneeScolaire annee);
 		#endregion
 	}
 
@@ -96,15 +97,35 @@ namespace SchoolXam.Data
 			{
 				_conn.UpdateWithChildren(annee);
 
+				foreach (Matiere matiere in annee.Matieres)
+				{
+					if (matiere.matiereID == 0)
+					{
+						_conn.Insert(matiere);
+					}
+				}
+
 				foreach (Classe classe in annee.Classes)
 				{
-					_conn.UpdateWithChildren(classe);
+					if (classe.classeID == 0)
+					{
+						_conn.InsertWithChildren(classe);
+					}
+					else
+					{
+						_conn.UpdateWithChildren(classe);
 
-					_conn.InsertOrReplaceAllWithChildren(classe.Eleves);
+						_conn.InsertOrReplaceAllWithChildren(classe.Eleves);
 
-					_conn.InsertOrReplaceAllWithChildren(classe.Devoirs);
+						_conn.InsertOrReplaceAllWithChildren(classe.Devoirs);
+					}
 				}
 			}
+		}
+		
+		public void DeleteAnnee(AnneeScolaire annee)
+		{
+			_conn.Delete(annee);
 		}
 		#endregion
 
@@ -114,14 +135,14 @@ namespace SchoolXam.Data
 			return _conn.Table<Classe>().Where(cl => cl.anneeID == annee.anneeID).ToList();
 		}
 
-		public List<Classe> Get_ClassesWithChildrenByAnnee(AnneeScolaire annee)
-		{
-			return _conn.GetAllWithChildren<Classe>(m => m.anneeID == annee.anneeID);
-		}
-
 		public Classe GetClasseWithChildren(Classe classe)
 		{
 			return _conn.GetWithChildren<Classe>(classe.classeID);
+		}
+
+		public void DeleteClasse(Classe classe)
+		{
+			_conn.Delete(classe);
 		}
 		#endregion
 
@@ -131,20 +152,10 @@ namespace SchoolXam.Data
 			return _conn.Table<Matiere>().Where(ma => ma.anneeID == annee.anneeID).ToList();
 		}
 
-		//public List<Matiere> Get_MatieresWithChildrenByAnnee(AnneeScolaire annee)
-		//{
-		//	return _conn.GetAllWithChildren<Matiere>(m=>m.anneeID == annee.anneeID);
-		//}
-
 		public Matiere Get_MatiereWithChildren(Matiere matiere)
 		{
 			return _conn.GetWithChildren<Matiere>(matiere.matiereID);
 		}
-
-		//public void Update_MatiereWithChildren(Matiere matiere)
-		//{
-		//	_conn.UpdateWithChildren(matiere);
-		//}
 		#endregion
 
 		#region Eleve

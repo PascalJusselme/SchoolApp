@@ -9,17 +9,11 @@
 
     <StackLayout
         Margin="10,10,10,10">
-        <Label 
-            Text="Libellé de la Matière à ajouter"/>
-        <Entry 
-            x:Name="txtMatiereLib"
-            Placeholder="Libellé Matière à ajouter"
-            Text="{Binding MatiereLib}"/>
         <Button
             x:Name="btnAddMatiere"
             Text="Ajouter Matière"
             Command="{Binding AddMatiereCommand}"
-            CommandParameter="{Binding MatiereLib}"/>
+            CommandParameter="{Binding Matiere}"/>
         <ListView 
             x:Name="lstMatieres"
             ItemsSource="{Binding ListMatieres}"
@@ -38,6 +32,9 @@
                                 <ColumnDefinition Width="50"/>
                                 <ColumnDefinition Width="auto"/>
                             </Grid.ColumnDefinitions>
+                            <Label 
+                                Text="{Binding matiereID}" 
+                                Font="15,Bold"  />
                             <Label 
                                 Text="{Binding matiereLib}" 
                                 Font="15,Bold" 

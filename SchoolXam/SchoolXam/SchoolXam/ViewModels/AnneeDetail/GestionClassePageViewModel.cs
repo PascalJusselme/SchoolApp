@@ -33,17 +33,10 @@ namespace SchoolXam.ViewModels
 			get { return _listClasses; }
 			set { SetProperty(ref _listClasses, value); }
 		}
-
-		private string _classeLib;
-		public string ClasseLib
-		{
-			get { return _classeLib; }
-			set { SetProperty(ref _classeLib, value); }
-		}
 		#endregion
 
 		#region Classe Commands
-		public DelegateCommand<string> AddClasseCommand => new DelegateCommand<string>(AddClasse);
+		public DelegateCommand AddClasseCommand => new DelegateCommand(AddClasse);
 		public DelegateCommand<Classe> SelectClasseCommand => new DelegateCommand<Classe>(SelectClasse);
 		#endregion
 
@@ -61,42 +54,21 @@ namespace SchoolXam.ViewModels
 		}
 
 		#region Classe Methods
-		private void AddClasse(string classeLib)
+		private async void AddClasse()
 		{
-			Classe classe = new Classe
-			{
-				classeLib = classeLib,
-				Annee = Annee,
-				Matieres = new List<Matiere>(),
-				Eleves = new List<Eleve>(),
-				Devoirs = new List<Devoir>()
-			};
+			Classe classe = new Classe(Annee);
 
-			if (String.IsNullOrEmpty(classe.classeLib) || String.IsNullOrWhiteSpace(classe.classeLib))
-			{
-				DisplayAlert($"Le Libellé de la Classe ne peut pas être vide.");
-			}
-			else if (classe.Annee.Classes.Exists(cl => cl.classeLib == classe.classeLib))
-			{
-				DisplayAlert($"Le Libellé de la Classe existe déjà pour cette Année Scolaire.");
-			}
-			else
-			{
-				//Ajout de la Classe a la liste des Classes de l'Annee
-				Annee.Classes.Add(classe);
-				ListClasses.Add(classe);
+			var parameter = new NavigationParameters();
+			parameter.Add("Classe", classe);
 
-				//Reset ClasseLib Entry
-				ClasseLib = string.Empty;
-			}
+			await _navigationService.NavigateAsync("ClasseDetailPage", parameter);			
 		}
 
 		private async void SelectClasse(Classe classe)
 		{
-			var parameter = new NavigationParameters
-			{
-				{ "Classe", classe }
-			};
+			var parameter = new NavigationParameters();
+			parameter.Add("Classe", classe);
+			parameter.Add("IsSelectedClasse", true);
 
 			await _navigationService.NavigateAsync("ClasseDetailPage", parameter);
 		}
@@ -116,7 +88,10 @@ namespace SchoolXam.ViewModels
 
 		private void RaiseIsActiveChanged()
 		{
-			ListClasses = new ObservableCollection<Classe>(Annee.Classes);
+			if (IsActive)
+			{
+				ListClasses = new ObservableCollection<Classe>(Annee.Classes);
+			}
 		}
 		#endregion
 
@@ -137,11 +112,6 @@ namespace SchoolXam.ViewModels
 			{
 				Annee = parameters["Annee"] as AnneeScolaire;
 			}
-		}
-
-		public override void Destroy()
-		{
-
 		}
 		#endregion
 

@@ -4,21 +4,21 @@
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              xmlns:validate="clr-namespace:SchoolXam.Validation"
              prism:ViewModelLocator.AutowireViewModel="True"
-             x:Class="SchoolXam.Views.ClasseModifLibPage"
+             x:Class="SchoolXam.Views.MatiereModifLibPage"
              Title="Modification du Libellé">
-
+    
     <StackLayout
         Margin="10,10,10,10">
         <Label 
-            Text="Libellé de la Classe sélectionnée"/>
+            Text="Libellé de la Matiere sélectionnée"/>
         <Entry 
-            Placeholder="Enter Classe Lib here" 
-            Text="{Binding Classe.classeLib, Mode=TwoWay}" 
-            validate:Validation.Errors="{Binding Classe.Errors[classeLib]}" />
+            Placeholder="Enter Matiere Lib here" 
+            Text="{Binding Matiere.matiereLib, Mode=TwoWay}" 
+            validate:Validation.Errors="{Binding Matiere.Errors[matiereLib]}" />
         <Label 
-            Text="{Binding Classe.Errors[classeLib], Converter={StaticResource FirstErrorConverter}" 
+            Text="{Binding Matiere.Errors[matiereLib], Converter={StaticResource FirstErrorConverter}" 
             FontSize="Small" 
             TextColor="Red" />
     </StackLayout>
-
+    
 </ContentPage>

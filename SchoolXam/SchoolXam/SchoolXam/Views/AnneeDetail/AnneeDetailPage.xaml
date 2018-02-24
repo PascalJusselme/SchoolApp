@@ -11,6 +11,9 @@
         <ToolbarItem 
             Text="SaveAnnee" 
             Command="{Binding SaveAnneeCommand} "/>
+        <ToolbarItem 
+            Text="Exit" 
+            Command="{Binding ExitAnneeCommand} "/>
     </TabbedPage.ToolbarItems>
     
     <local:GestionAnneePage/>

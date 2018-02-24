@@ -12,6 +12,13 @@ namespace SchoolXam.Models
 	{
 		//const string NAMESREGEXPATTERN = @"\A\p{L}+([\p{Zs}\-][\p{L}]+)*\z";
 
+		public AnneeScolaire()
+		{
+			anneeLib = string.Empty;
+			Classes = new List<Classe>();
+			Matieres = new List<Matiere>();
+		}
+
 		[PrimaryKey, AutoIncrement]
 		public int anneeID { get; set; }
 

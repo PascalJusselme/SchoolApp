@@ -8,6 +8,7 @@
 		<!-- Application resource dictionary -->
         <ResourceDictionary>
             <converter:ItemTappedConverter x:Key="ItemTappedConverter" />
+            <converter:FirstErrorConverter x:Key="FirstErrorConverter" />
         </ResourceDictionary> 
     </Application.Resources>
 </prism:PrismApplication>

@@ -25,13 +25,7 @@ namespace SchoolXam.ViewModels
 
 		public AnneeScolaire Load_Annee(AnneeScolaire annee)
 		{
-			if (annee.anneeID == 0)
-			{
-				annee.anneeLib = string.Empty;
-				annee.Classes = new List<Classe>();
-				annee.Matieres = new List<Matiere>();
-			}
-			else
+			if (annee.anneeID != 0)
 			{
 				annee = _rep.Get_Annee(annee);
 

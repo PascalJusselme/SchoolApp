@@ -36,6 +36,9 @@
                                 <ColumnDefinition Width="auto"/>
                             </Grid.ColumnDefinitions>
                             <Label 
+                                Text="{Binding anneeID}" 
+                                Font="15,Bold" />
+                            <Label 
                                 Text="{Binding anneeLib}" 
                                 Font="15,Bold" 
                                 Grid.Column="1" />

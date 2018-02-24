@@ -2,8 +2,6 @@
 using Prism.Navigation;
 using SchoolXam.Data;
 using SchoolXam.Models;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace SchoolXam.ViewModels
@@ -47,49 +45,23 @@ namespace SchoolXam.ViewModels
 			_navigationService = navigationService;
 		}
 
-		#region INavigationService Implementation
-		public override void OnNavigatedFrom(NavigationParameters parameters)
-		{
-
-		}
-
-		public override void OnNavigatedTo(NavigationParameters parameters)
-		{
-
-		}
-
-		public override void OnNavigatingTo(NavigationParameters parameters)
-		{
-			Get_ListAnnees();
-		}
-
-		public override void Destroy()
-		{
-
-		}
-		#endregion
-
 		#region Annees Methods
-		private async void Selected_Annee(AnneeScolaire annee)
+		private void Selected_Annee(AnneeScolaire annee)
 		{
-			var parameter = new NavigationParameters
-			{
-				{ "Annee", Load_Annee(annee) }
-			};
+			var param = new NavigationParameters();
+			param.Add("Annee", Load_Annee(annee));
 
-			await _navigationService.NavigateAsync("AnneeDetailPage", parameter);
+			_navigationService.NavigateAsync("AnneeDetailPage", param);
 		}
 
-		private async void Add_Annee()
+		private void Add_Annee()
 		{
-			AnneeScolaire an = new AnneeScolaire();
+			AnneeScolaire annee = new AnneeScolaire();
 
-			var parameter = new NavigationParameters
-			{
-				{ "Annee", Load_Annee(an) }
-			};
+			var param = new NavigationParameters();
+			param.Add("Annee", Load_Annee(annee));
 
-			await _navigationService.NavigateAsync("AnneeDetailPage", parameter);
+			_navigationService.NavigateAsync("AnneeDetailPage", param);
 		}
 
 		private void Get_ListAnnees()
@@ -106,5 +78,23 @@ namespace SchoolXam.ViewModels
 			}
 		}
 		#endregion
+
+		#region INavigationService Implementation
+		public override void OnNavigatedFrom(NavigationParameters parameters)
+		{
+
+		}
+
+		public override void OnNavigatedTo(NavigationParameters parameters)
+		{
+
+		}
+
+		public override void OnNavigatingTo(NavigationParameters parameters)
+		{
+			Get_ListAnnees();
+		}
+		#endregion
+
 	}
 }

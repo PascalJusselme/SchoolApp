@@ -6,21 +6,14 @@
              prism:ViewModelLocator.AutowireViewModel="True"             
              x:Class="SchoolXam.Views.GestionClassePage"
              Title="Gestion des Classes de l'Année">
-    
+
     <StackLayout
         Margin="10,10,10,10">
-        <Label 
-            Text="Libellé de la Classe à ajouter"/>
-        <Entry 
-            x:Name="txtClasseLib"
-            Placeholder="Libellé de la Classe à ajouter"
-            Text="{Binding ClasseLib}">
-        </Entry>
         <Button
             x:Name="btnAddClasse"
             Text="Ajouter Classe"
             Command="{Binding AddClasseCommand}"
-            CommandParameter="{Binding ClasseLib}"/>
+            CommandParameter="{Binding Classe}"/>
         <ListView 
             x:Name="lstClasses"
             ItemsSource="{Binding ListClasses}"
@@ -39,6 +32,9 @@
                                 <ColumnDefinition Width="50"/>
                                 <ColumnDefinition Width="auto"/>
                             </Grid.ColumnDefinitions>
+                            <Label 
+                                Text="{Binding classeID}" 
+                                Font="15,Bold"  />
                             <Label 
                                 Text="{Binding classeLib}" 
                                 Font="15,Bold" 

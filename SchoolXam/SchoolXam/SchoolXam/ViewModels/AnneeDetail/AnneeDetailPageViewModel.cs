@@ -3,8 +3,7 @@ using Prism.Navigation;
 using Prism.Services;
 using SchoolXam.Data;
 using SchoolXam.Models;
-using System;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SchoolXam.ViewModels
 {
@@ -23,16 +22,17 @@ namespace SchoolXam.ViewModels
 			set { SetProperty(ref _annee, value); }
 		}
 
-		private AnneeScolaire _startedAnnee;
-		public AnneeScolaire StartedAnnee
+		private bool _isNewAnnee;
+		public bool IsNewAnnee
 		{
-			get { return _startedAnnee; }
-			set { SetProperty(ref _startedAnnee, value); }
+			get { return _isNewAnnee; }
+			set { SetProperty(ref _isNewAnnee, value); }
 		}
 		#endregion
 
 		#region Annee Commands
 		public DelegateCommand SaveAnneeCommand => new DelegateCommand(SaveAnnee);
+		public DelegateCommand ExitAnneeCommand => new DelegateCommand(ExitAnneeButton);
 		#endregion
 
 		#endregion
@@ -49,81 +49,91 @@ namespace SchoolXam.ViewModels
 		}
 
 		#region AnneeScolaire Methods
-		private async void SaveAnnee()
+		private void SaveAnnee()
 		{
-			//if (Annee.IsSubmitEnabled)
-			//{
-			//	_rep.SaveAnnee(Annee);
-
-			//	await _navigationService.GoBackToRootAsync();
-			//}
-			//else
-			//{
-			//	var param = new NavigationParameters
-			//	{
-			//		{ "Annee", Annee }
-			//	};
-
-			//	await _navigationService.NavigateAsync("AnneeDetailPage", param);
-			//}
-
-			if (Annee.ValidateProperties())
+			if (IsValid_Annee())
 			{
 				_rep.SaveAnnee(Annee);
 
+				_navigationService.GoBackToRootAsync();
+			}
+		}
+
+		private bool IsValid_Annee()
+		{
+			if (Annee.ValidateProperties())
+			{
+				if (!_rep.Get_ListAnnees().Exists(an => an.anneeLib == Annee.anneeLib
+													  && an.anneeID != Annee.anneeID))
+				{
+					return true;
+				}
+				else
+				{
+					_pageDialogService.DisplayAlertAsync("Erreur",
+														 "Une année ayant le même libellé existe déjà.",
+														 "OK");
+
+					return false;
+				}
+			}
+			else
+			{
+				_pageDialogService.DisplayAlertAsync("Erreur", "L'année en cours d'édition n'est pas valide.\n" +
+													 "Veuillez vérifier son libellé.", "OK");
+
+				return false;
+			}
+		}
+
+		private void DeleteAnnee(AnneeScolaire annee)
+		{
+
+		}
+
+		private async void ExitAnneeButton()
+		{
+			await ExitAnnee();
+		}
+
+		// Method use for HardWare Back Button on Android
+		public virtual async Task<bool> ExitAnnee()
+		{
+			string message = $"Voulez-vous vraiment quitter l'année en cours d'édition?";
+
+			var res = await _pageDialogService.DisplayAlertAsync("Alert", message, "Exit without Save", "Save and Exit");
+
+			// Exit without Save
+			if (res)
+			{
 				await _navigationService.GoBackToRootAsync();
 			}
 			else
 			{
-				var param = new NavigationParameters
-				{
-					{ "Annee", Annee }
-				};
-
-				await _navigationService.NavigateAsync("AnneeDetailPage", param);
+				SaveAnnee();
 			}
+
+			return res;
 		}
 		#endregion
 
 		#region INavigationService Implementation
 		public override void OnNavigatedFrom(NavigationParameters parameters)
 		{
-			// Implémenter PageDialog pour demander si on veut RETOURNER SUR LA LISTE DES ANNEES
-			// SANS SAUVEGARDER le(s) changement(s) apportés à l'ANNÉE en cours de modif
-			// TROUVER LE MOYEN DE FAIRE CELA SANS TROP DE CHARGEMENT
 
-			//_rep.SaveAnnee(StartedAnnee);
 		}
 
 		public override void OnNavigatedTo(NavigationParameters parameters)
 		{
-			
+
 		}
 
 		public override void OnNavigatingTo(NavigationParameters parameters)
 		{
-			if (parameters != null && parameters.ContainsKey("Annee"))
+			if (parameters.ContainsKey("Annee"))
 			{
 				Annee = parameters["Annee"] as AnneeScolaire;
-
-				// Sauvegarde de l'Année à son état à la selection
-				// pour ecraser les modifs si on veut pas sauvegarder
-				// StartedAnnee = Load_Annee(Annee);
 			}
-		}
-
-		public override void Destroy()
-		{
-
-		}
-		#endregion
-
-		#region IPageDialogService Propertie and Method
-		public DelegateCommand<string> DisplayAlertCommand => new DelegateCommand<string>(DisplayAlert);
-
-		private async void DisplayAlert(string message)
-		{
-			await _pageDialogService.DisplayAlertAsync("Alert", message, "Accept", "Cancel");
 		}
 		#endregion
 	}
